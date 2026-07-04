@@ -16,7 +16,7 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { leads } = body;
 
-    const formattedLeads = leads.map((lead: any) => ({
+    const formattedLeads = leads.map((lead: Record<string, string>) => ({
       client_id: clientRes.data.id,
       name: lead.name || null,
       contact_id: lead.contact_id,
@@ -30,7 +30,8 @@ export async function POST(req: Request) {
     if (error) throw error;
 
     return NextResponse.json({ success: true, count: formattedLeads.length });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

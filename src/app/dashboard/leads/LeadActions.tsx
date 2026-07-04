@@ -29,7 +29,7 @@ export default function LeadActions() {
           } else {
             alert(`Upload failed: ${data.error}`);
           }
-        } catch (error) {
+        } catch {
           alert('Error uploading file');
         } finally {
           setUploading(false);
@@ -51,7 +51,7 @@ export default function LeadActions() {
       } else {
         alert(`Error: ${data.error}`);
       }
-    } catch (err) {
+    } catch {
       alert('Failed to trigger campaign');
     } finally {
       setTriggering(false);

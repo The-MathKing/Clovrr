@@ -1,4 +1,5 @@
-import Head from 'next/head';
+/* eslint-disable react/no-unescaped-entities */
+import Link from 'next/link';
 
 export const metadata = {
   title: "Terms of Service | Clovrr Solutions",
@@ -10,7 +11,7 @@ export default function TermsOfService() {
     <div className="min-h-screen bg-gray-950 text-gray-100 font-sans">
       <nav className="w-full bg-gray-950/80 backdrop-blur-md border-b border-gray-800 py-4 sticky top-0 z-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          <a href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+          <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <svg viewBox="0 0 100 100" className="w-8 h-8 text-emerald-500" fill="currentColor">
               <circle cx="50" cy="25" r="18" />
               <circle cx="73.8" cy="42.3" r="18" />
@@ -21,14 +22,14 @@ export default function TermsOfService() {
               <circle cx="50" cy="50" r="6" fill="#022c22" />
             </svg>
             <span className="font-bold text-xl tracking-tight text-white">Clovrr</span>
-          </a>
+          </Link>
           <div className="flex items-center gap-6">
-            <a href="/login" className="text-sm font-medium text-gray-400 hover:text-white transition-colors">
+            <Link href="/login" className="text-sm font-medium text-gray-400 hover:text-white transition-colors">
               Client Login
-            </a>
-            <a href="/" className="text-sm font-medium text-gray-400 hover:text-white transition-colors">
+            </Link>
+            <Link href="/" className="text-sm font-medium text-gray-400 hover:text-white transition-colors">
               Back to Home
-            </a>
+            </Link>
           </div>
         </div>
       </nav>

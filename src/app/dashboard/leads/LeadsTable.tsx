@@ -1,8 +1,8 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 
-export default function LeadsTable({ leads }: { leads: any[] }) {
-  const [selectedLead, setSelectedLead] = useState<any>(null);
+export default function LeadsTable({ leads }: { leads: Record<string, unknown>[] }) {
+  const [selectedLead, setSelectedLead] = useState<Record<string, unknown> | null>(null);
 
   const getStatusColor = (status: string) => {
     switch(status) {
@@ -121,8 +121,8 @@ export default function LeadsTable({ leads }: { leads: any[] }) {
                 </div>
               ) : (
                 [...selectedLead.conversations]
-                  .sort((a: any, b: any) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
-                  .map((msg: any, idx: number) => {
+                  .sort((a: Record<string, unknown>, b: Record<string, unknown>) => new Date(String(a.created_at)).getTime() - new Date(String(b.created_at)).getTime())
+                  .map((msg: Record<string, unknown>, idx: number) => {
                     const isAI = msg.role === 'assistant' || msg.role === 'system';
                     return (
                       <div key={idx} className={`flex ${isAI ? 'justify-start' : 'justify-end'}`}>

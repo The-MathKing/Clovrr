@@ -1,4 +1,5 @@
 import { login, signup, signInWithGoogle } from './actions';
+import Link from 'next/link';
 
 export default function LoginPage({ searchParams }: { searchParams: { message: string } }) {
   return (
@@ -9,7 +10,7 @@ export default function LoginPage({ searchParams }: { searchParams: { message: s
       </div>
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center relative z-10">
-        <a href="/" className="inline-flex items-center gap-2 mb-6 hover:opacity-80 transition-opacity">
+        <Link href="/" className="inline-flex items-center gap-2 mb-6 hover:opacity-80 transition-opacity">
           <svg viewBox="0 0 100 100" className="w-8 h-8 text-white" fill="currentColor">
             <circle cx="50" cy="25" r="18" />
             <circle cx="73.8" cy="42.3" r="18" />
@@ -20,10 +21,10 @@ export default function LoginPage({ searchParams }: { searchParams: { message: s
             <circle cx="50" cy="50" r="6" fill="#000" />
           </svg>
           <span className="font-semibold text-2xl tracking-tight text-white">Clovrr</span>
-        </a>
+        </Link>
         <h2 className="text-center text-3xl font-bold tracking-tight text-white">Sign in to your dashboard</h2>
         <p className="mt-2 text-center text-sm text-gray-400">
-          Or <a href="/demo" className="font-medium text-emerald-400 hover:text-emerald-300 transition-colors">book a demo to get access</a>
+          Or <Link href="/demo" className="font-medium text-emerald-400 hover:text-emerald-300 transition-colors">book a demo to get access</Link>
         </p>
       </div>
 

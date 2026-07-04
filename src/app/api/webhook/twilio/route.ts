@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import twilio from 'twilio';
 
 export async function POST(req: Request) {
   // Initialize services inside handler to prevent build-time crashes when env vars are missing
@@ -10,10 +9,6 @@ export async function POST(req: Request) {
     process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder'
   );
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || 'placeholder');
-  const twilioClient = twilio(
-    process.env.TWILIO_ACCOUNT_SID || 'ACplaceholder', 
-    process.env.TWILIO_AUTH_TOKEN || 'placeholder'
-  );
 
   try {
     // 1. Parse the incoming Twilio Webhook
@@ -148,8 +143,9 @@ export async function POST(req: Request) {
 
     return new NextResponse('OK', { status: 200 });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Webhook Error:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    const message = error instanceof Error ? error.message : String(error);
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

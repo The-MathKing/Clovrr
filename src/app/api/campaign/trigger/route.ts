@@ -3,7 +3,7 @@ import { createClient } from '@/utils/supabase/server';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import twilio from 'twilio';
 
-export async function POST(req: Request) {
+export async function POST() {
   try {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
@@ -20,14 +20,13 @@ export async function POST(req: Request) {
       .eq('client_id', client.id)
       .eq('status', 'new');
 
-    const uncontactedLeads = (leads || []).filter((l: any) => !l.conversations || l.conversations.length === 0);
+    const uncontactedLeads = (leads || []).filter((l: Record<string, unknown>) => !l.conversations || (Array.isArray(l.conversations) && l.conversations.length === 0));
 
     if (uncontactedLeads.length === 0) {
       return NextResponse.json({ success: true, count: 0, message: 'No uncontacted leads found' });
     }
 
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
     const twilioClient = twilio(
       process.env.TWILIO_ACCOUNT_SID || 'placeholder', 
       process.env.TWILIO_AUTH_TOKEN || 'placeholder'
@@ -96,7 +95,8 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true, count: sentCount });
 
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

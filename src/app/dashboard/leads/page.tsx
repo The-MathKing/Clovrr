@@ -14,7 +14,7 @@ export default async function LeadsManager() {
     .eq('email', user?.email)
     .single();
 
-  let leads: any[] = [];
+  let leads: Record<string, unknown>[] = [];
   
   if (client) {
     const { data } = await supabase

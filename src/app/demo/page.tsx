@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import { InlineWidget } from "react-calendly";
+import Link from 'next/link';
 
 export default function DemoPage() {
   const [isUnlocked, setIsUnlocked] = useState(false);
@@ -20,7 +21,7 @@ export default function DemoPage() {
       <nav className="w-full bg-black/50 backdrop-blur-xl border-b border-white/5 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-14 items-center">
-            <a href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+            <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
               <svg viewBox="0 0 100 100" className="w-6 h-6 text-white" fill="currentColor">
                 <circle cx="50" cy="25" r="18" />
                 <circle cx="73.8" cy="42.3" r="18" />
@@ -31,14 +32,14 @@ export default function DemoPage() {
                 <circle cx="50" cy="50" r="6" fill="#000" />
               </svg>
               <span className="font-semibold text-lg tracking-tight text-white">Clovrr</span>
-            </a>
+            </Link>
             <div className="flex items-center gap-6">
-              <a href="/login" className="text-sm font-medium text-gray-400 hover:text-white transition-colors">
+              <Link href="/login" className="text-sm font-medium text-gray-400 hover:text-white transition-colors">
                 Client Login
-              </a>
-              <a href="/" className="text-gray-500 hover:text-white font-medium text-sm transition-colors">
+              </Link>
+              <Link href="/" className="text-gray-500 hover:text-white font-medium text-sm transition-colors">
                 Back to Home
-              </a>
+              </Link>
             </div>
           </div>
         </div>

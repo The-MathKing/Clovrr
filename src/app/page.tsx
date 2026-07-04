@@ -1,4 +1,4 @@
-import Head from 'next/head';
+/* eslint-disable react/no-unescaped-entities */
 
 export default function Home() {
   return (

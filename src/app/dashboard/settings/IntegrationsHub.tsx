@@ -2,7 +2,14 @@
 
 import React, { useState } from 'react';
 
-export default function IntegrationsHub({ client }: { client: any }) {
+type IntegrationsClientData = {
+  twilio_number?: string;
+  twilio_account_sid?: string;
+  twilio_auth_token?: string;
+  sendgrid_api_key?: string;
+};
+
+export default function IntegrationsHub({ client }: { client: IntegrationsClientData | null }) {
   const [activeModal, setActiveModal] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({

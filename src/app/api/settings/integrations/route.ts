@@ -13,7 +13,7 @@ export async function POST(request: Request) {
     const body = await request.json();
     
     // Validate inputs
-    const updates: any = {};
+    const updates: Record<string, string> = {};
     if (body.twilio_account_sid !== undefined) updates.twilio_account_sid = body.twilio_account_sid;
     if (body.twilio_auth_token !== undefined) updates.twilio_auth_token = body.twilio_auth_token;
     if (body.sendgrid_api_key !== undefined) updates.sendgrid_api_key = body.sendgrid_api_key;

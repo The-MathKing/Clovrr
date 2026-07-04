@@ -4,7 +4,9 @@ import React, { useRef, useEffect, useState } from 'react';
 
 export default function ChatTester({ initialMessage }: { initialMessage?: string }) {
   const defaultInitial = "Hi there! We noticed you were interested in our services. Are you still looking to book a demo?";
-  const [messages, setMessages] = useState<any[]>([
+  
+  type Message = { id: string; role: 'user' | 'assistant' | 'system'; content: string };
+  const [messages, setMessages] = useState<Message[]>([
     { id: 'initial', role: 'assistant', content: initialMessage || defaultInitial }
   ]);
   const [input, setInput] = useState('');
@@ -57,9 +59,13 @@ export default function ChatTester({ initialMessage }: { initialMessage?: string
           return newM;
         });
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
-      setError(err.message || 'Failed to send message');
+      if (err instanceof Error) {
+        setError(err.message || 'Failed to send message');
+      } else {
+        setError('Failed to send message');
+      }
     } finally {
       setIsLoading(false);
     }

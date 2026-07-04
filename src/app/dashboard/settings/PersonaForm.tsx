@@ -2,7 +2,13 @@
 
 import React, { useState } from 'react';
 
-export default function PersonaForm({ client }: { client: any }) {
+type ClientData = {
+  calendly_link?: string;
+  system_prompt?: string;
+  initial_message?: string;
+};
+
+export default function PersonaForm({ client }: { client: ClientData | null }) {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     calendly_link: client?.calendly_link || '',

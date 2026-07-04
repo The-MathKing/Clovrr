@@ -3,6 +3,8 @@ import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
 import { logout } from '@/app/login/actions';
 
+import Link from 'next/link';
+
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -23,7 +25,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
       {/* Sidebar */}
       <aside className="w-full md:w-64 bg-[#0a0a0a] border-r border-white/5 flex flex-col">
         <div className="h-14 flex items-center px-6 border-b border-white/5">
-          <a href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+          <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <svg viewBox="0 0 100 100" className="w-6 h-6 text-emerald-500" fill="currentColor">
               <circle cx="50" cy="25" r="18" />
               <circle cx="73.8" cy="42.3" r="18" />
@@ -34,7 +36,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
               <circle cx="50" cy="50" r="6" fill="#022c22" />
             </svg>
             <span className="font-bold text-lg tracking-tight text-white">Clovrr</span>
-          </a>
+          </Link>
         </div>
         
         <div className="px-4 py-6">

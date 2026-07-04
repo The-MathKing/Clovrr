@@ -2,11 +2,10 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import Stripe from 'stripe';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-  apiVersion: '2026-06-24.dahlia', // Update to latest Stripe API version if necessary
-});
-
 export async function POST(req: Request) {
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder', {
+    apiVersion: '2026-06-24.dahlia', 
+  });
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
     process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder'

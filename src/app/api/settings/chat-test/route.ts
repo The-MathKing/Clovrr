@@ -26,11 +26,7 @@ export async function POST(req: Request) {
       .eq('email', user.email)
       .single();
 
-    if (!client) {
-      return new Response('Client not found', { status: 404 });
-    }
-
-    const baseSystemPrompt = client.system_prompt || `You are an expert AI Lead Concierge for ${client.name}. Your objective is to help the user and encourage them to book a time.`;
+    const baseSystemPrompt = client?.system_prompt || `You are an expert AI Lead Concierge for ${client?.name || 'an agency'}. Your objective is to help the user and encourage them to book a time.`;
     
     const systemPrompt = `${baseSystemPrompt}
 
@@ -41,7 +37,7 @@ export async function POST(req: Request) {
 ### CORE BEHAVIOR RULES:
 1. BREVITY IS KING: People read texts on the move. Keep every single response under 160 characters (1-2 sentences maximum). Do not write blocks of text.
 2. NATURAL & TONED-DOWN: Do not sound like a marketing bot.
-3. BOOKING: Always use this exact link when offering to book: ${client.calendly_link || 'our booking calendar'}
+3. BOOKING: Always use this exact link when offering to book: ${client?.calendly_link || 'our booking calendar'}
 `;
 
     const result = await streamText({

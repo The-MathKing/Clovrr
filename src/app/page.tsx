@@ -9,10 +9,13 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <div className="flex items-center gap-2">
-              <img src="/icon.png" alt="Clovrr Logo" className="h-8 w-8" />
+              <svg viewBox="0 0 100 100" className="w-8 h-8 text-emerald-700" fill="currentColor">
+                <path d="M50 5 C50 5 62 25 78 30 C95 36 90 58 90 58 C90 58 75 68 65 85 C55 100 45 100 35 85 C25 68 10 58 10 58 C10 58 5 36 22 30 C38 25 50 5 50 5 Z" />
+                <circle cx="50" cy="50" r="12" fill="white" />
+              </svg>
               <span className="font-bold text-xl tracking-tight text-emerald-900">Clovrr</span>
             </div>
-            <a href="#demo" className="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded-lg font-medium transition-colors text-sm">
+            <a href="/demo" className="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded-lg font-medium transition-colors text-sm">
               Book Demo
             </a>
           </div>
@@ -34,7 +37,7 @@ export default function Home() {
             Clovrr's AI Lead Concierge responds, qualifies, and books your inbound leads in 30 seconds, 24/7. Stop bleeding ad spend and start closing.
           </p>
           <div className="pt-4">
-            <a href="#demo" className="inline-flex items-center justify-center bg-gray-900 hover:bg-gray-800 text-white px-8 py-4 rounded-xl font-bold text-lg transition-transform transform hover:scale-105 shadow-xl">
+            <a href="/demo" className="inline-flex items-center justify-center bg-gray-900 hover:bg-gray-800 text-white px-8 py-4 rounded-xl font-bold text-lg transition-transform transform hover:scale-105 shadow-xl">
               See the bot in action
               <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
             </a>
@@ -44,9 +47,9 @@ export default function Home() {
         {/* PROOF SECTION */}
         <section className="bg-white rounded-3xl p-4 md:p-8 shadow-2xl border border-gray-100 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob"></div>
-          <div className="absolute top-0 left-0 w-64 h-64 bg-teal-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-2000"></div>
+          <div className="absolute top-0 left-0 w-64 h-64 bg-teal-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob" style={{ animationDelay: '2s' }}></div>
           
-          <div className="relative">
+          <div className="relative z-10">
             <h2 className="text-2xl font-bold text-center mb-8">Watch it qualify and book a lead instantly</h2>
             <div className="aspect-w-16 aspect-h-9 rounded-xl overflow-hidden bg-gray-100 border border-gray-200 shadow-inner flex items-center justify-center">
               {/* Loom Video Embed Placeholder - REPLACE WITH ACTUAL LOOM EMBED IF PROVIDED */}
@@ -86,7 +89,9 @@ export default function Home() {
             
             <div className="bg-gray-900 text-white p-8 rounded-2xl shadow-xl relative overflow-hidden transform md:scale-105 z-10 border border-emerald-500">
               <div className="absolute top-0 right-0 p-4 opacity-10">
-                <svg width="100" height="100" viewBox="0 0 100 100" fill="currentColor" className="text-emerald-500"><rect width="100" height="100" rx="20"/><circle cx="50" cy="50" r="15"/><circle cx="35" cy="35" r="15"/><circle cx="65" cy="35" r="15"/><circle cx="35" cy="65" r="15"/><circle cx="65" cy="65" r="15"/><circle cx="50" cy="20" r="15"/></svg>
+                <svg width="100" height="100" viewBox="0 0 100 100" fill="currentColor" className="text-emerald-500">
+                  <path d="M50 5 C50 5 62 25 78 30 C95 36 90 58 90 58 C90 58 75 68 65 85 C55 100 45 100 35 85 C25 68 10 58 10 58 C10 58 5 36 22 30 C38 25 50 5 50 5 Z" />
+                </svg>
               </div>
               <h3 className="text-xl font-bold text-emerald-400 mb-6">With Clovrr (&lt;5 min response)</h3>
               <ul className="space-y-4 text-gray-300 font-medium relative z-10">
@@ -106,24 +111,19 @@ export default function Home() {
         </section>
 
         {/* CTA SECTION */}
-        <section id="demo" className="bg-white rounded-3xl p-8 md:p-12 shadow-sm border border-gray-200 mb-24">
-          <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold mb-4">Book your custom demo</h2>
-            <p className="text-gray-600">See exactly how Clovrr will plug into your agency's funnel.</p>
+        <section id="demo" className="bg-emerald-900 rounded-3xl p-8 md:p-16 shadow-2xl mb-24 text-center relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
+            <svg width="200" height="200" viewBox="0 0 100 100" fill="currentColor" className="text-emerald-500">
+              <path d="M50 5 C50 5 62 25 78 30 C95 36 90 58 90 58 C90 58 75 68 65 85 C55 100 45 100 35 85 C25 68 10 58 10 58 C10 58 5 36 22 30 C38 25 50 5 50 5 Z" />
+            </svg>
           </div>
-          
-          <div className="bg-gray-50 rounded-2xl border border-gray-200 overflow-hidden min-h-[600px] flex items-center justify-center p-4">
-             {/* Calendly Embed Placeholder */}
-             <div className="w-full max-w-3xl h-[600px] bg-white rounded-xl shadow-sm border border-gray-200 flex flex-col items-center justify-center p-8 text-center">
-                <div className="w-20 h-20 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mb-6">
-                  <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">Calendly Embed Goes Here</h3>
-                <p className="text-gray-500 mb-6">Replace this container with your Calendly inline embed widget code.</p>
-                <div className="px-6 py-3 bg-gray-100 text-gray-600 rounded-lg font-mono text-sm border border-gray-200 text-left w-full overflow-x-auto">
-                  {`<div class="calendly-inline-widget" data-url="https://calendly.com/YOUR_LINK" style="min-width:320px;height:600px;"></div>`}
-                </div>
-             </div>
+          <div className="relative z-10 max-w-2xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">Ready to stop losing leads?</h2>
+            <p className="text-emerald-100 text-lg mb-8">Get full access to our demo calendar to see exactly how Clovrr integrates into your agency's funnel.</p>
+            <a href="/demo" className="inline-flex items-center justify-center bg-white hover:bg-gray-50 text-emerald-900 px-8 py-4 rounded-xl font-bold text-lg transition-transform transform hover:scale-105 shadow-xl">
+              Enter your details to book
+              <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+            </a>
           </div>
         </section>
 
@@ -132,8 +132,11 @@ export default function Home() {
       {/* FOOTER */}
       <footer className="bg-gray-900 text-gray-400 py-12 border-t border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="flex items-center gap-2">
-            <img src="/icon.png" alt="Clovrr Logo" className="h-6 w-6 opacity-75 grayscale" />
+          <div className="flex items-center gap-2 text-gray-400">
+            <svg viewBox="0 0 100 100" className="w-6 h-6 opacity-75 grayscale" fill="currentColor">
+              <path d="M50 5 C50 5 62 25 78 30 C95 36 90 58 90 58 C90 58 75 68 65 85 C55 100 45 100 35 85 C25 68 10 58 10 58 C10 58 5 36 22 30 C38 25 50 5 50 5 Z" />
+              <circle cx="50" cy="50" r="12" fill="white" />
+            </svg>
             <span className="font-semibold text-gray-300">Aryan Padarthi Clovrr Solutions</span>
           </div>
           <div className="flex gap-6 text-sm">

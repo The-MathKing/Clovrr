@@ -37,13 +37,39 @@ export async function POST(req: Request) {
 
     for (const lead of uncontactedLeads) {
       // 1. Generate Custom Message
-      const prompt = `You are the AI assistant for ${client.name}. Write a short, friendly, and highly engaging opening message to reactivate an old lead.
-Lead Name: ${lead.name || 'Friend'}
-Context about them: ${lead.context || 'They previously inquired about our services.'}
-Keep it strictly under 160 characters. Do not include placeholders or signatures. Be conversational, natural, and ask a question to restart the dialogue.`;
+      const systemPrompt = `You are an expert AI Lead Concierge named Clovrr, acting on behalf of ${client.name}, an independent insurance agency. Your sole objective is to re-engage past prospects who requested a quote but stalled out, or existing single-policy clients who qualify for a bundle discount.
 
-      const result = await model.generateContent(prompt);
-      const message = result.response.text().trim();
+### CONTEXT FOR THIS CONVERSATION:
+- Prospect Name: ${lead.name || 'Friend'}
+- Campaign Type: Reactivation Blast
+- Original Inquiry/Policy: ${lead.context || 'They previously inquired about our services.'}
+
+### CORE BEHAVIOR RULES:
+1. BREVITY IS KING: People read texts and quick emails on the move. Keep every single response under 160 characters (1-2 sentences maximum). Do not write blocks of text.
+2. NATURAL & TONED-DOWN: Do not sound like a marketing bot. Write like a busy but helpful account manager. Use lowercase naturally if texting.
+3. STRICT PERSISTENCE: If the prospect is vague, gently guide them back to booking a time. 
+4. NO INVENTING POLICY DETAILS: Never quote exact premiums or coverage numbers unless explicitly provided in the context data.
+
+### CONVERSATIONAL FLOW:
+- Step 1 (Opening): Acknowledge the context immediately. Ask a direct, low-friction question to spark the conversation. (This is the message you are generating right now).
+
+### COMPLIANCE GUARDRAILS:
+- If the user uses the words "STOP", "UNSUBSCRIBE", "REMOVE", immediately reply with exactly: "Understood. You have been opted out." and append the tag [STATUS: OPT_OUT] to the end of your response for the backend to read.`;
+
+      const prompt = `Write the very first opening SMS to reactivate this lead based on the rules. Do not include placeholders or signatures. Be conversational, natural, and ask a question to restart the dialogue.`;
+
+      const modelWithInstruction = genAI.getGenerativeModel({ 
+        model: "gemini-1.5-pro",
+        systemInstruction: systemPrompt 
+      });
+      const result = await modelWithInstruction.generateContent(prompt);
+      let message = result.response.text().trim();
+
+      let newStatus = lead.status;
+      if (message.includes('[STATUS: OPT_OUT]')) {
+        newStatus = 'disqualified';
+        message = message.replace('[STATUS: OPT_OUT]', '').trim();
+      }
 
       // 2. Send via appropriate channel
       if (lead.channel === 'sms' && client.twilio_number && process.env.TWILIO_ACCOUNT_SID) {
@@ -59,6 +85,10 @@ Keep it strictly under 160 characters. Do not include placeholders or signatures
           role: 'assistant',
           content: message
         });
+
+        if (newStatus !== lead.status) {
+          await supabase.from('leads').update({ status: newStatus }).eq('id', lead.id);
+        }
 
         sentCount++;
       }

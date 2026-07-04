@@ -27,20 +27,25 @@ export default async function DashboardOverview() {
     <div className="p-8">
       <h1 className="text-2xl font-bold mb-8">Dashboard Overview</h1>
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-sm">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-sm flex flex-col justify-center">
           <h3 className="text-gray-400 text-sm font-medium mb-1">Total Leads (All Time)</h3>
           <p className="text-3xl font-bold text-white">{totalLeads}</p>
         </div>
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-sm">
+        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-sm flex flex-col justify-center">
           <h3 className="text-gray-400 text-sm font-medium mb-1">Qualified / Booked</h3>
           <p className="text-3xl font-bold text-emerald-400">{qualifiedLeads}</p>
         </div>
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-sm">
+        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-sm flex flex-col justify-center">
           <h3 className="text-gray-400 text-sm font-medium mb-1">AI Conversion Rate</h3>
           <p className="text-3xl font-bold text-white">
             {totalLeads > 0 ? Math.round((qualifiedLeads / totalLeads) * 100) : 0}%
           </p>
+        </div>
+        <div className="bg-blue-900/20 border border-blue-900/50 rounded-xl p-6 shadow-sm flex flex-col justify-center">
+          <h3 className="text-blue-400 text-sm font-medium mb-1">Current Billing Cycle</h3>
+          <p className="text-3xl font-bold text-white">${qualifiedLeads * 30}</p>
+          <p className="text-xs text-blue-500 mt-1">@ $30 per qualified lead</p>
         </div>
       </div>
 

@@ -15,7 +15,7 @@ export async function signup(formData: FormData) {
   const { error, data: authData } = await supabase.auth.signUp(data)
 
   if (error) {
-    redirect('/login?message=Could not sign up')
+    redirect(`/login?message=${encodeURIComponent(error.message)}`)
   }
 
   if (authData.user && authData.user.email) {

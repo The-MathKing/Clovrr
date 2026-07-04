@@ -79,7 +79,7 @@ export default function DemoPage() {
             
             <div className={`w-full h-full transition-opacity duration-500 ${isUnlocked ? 'opacity-100' : 'opacity-30'}`}>
               <InlineWidget 
-                url="https://calendly.com/YOUR_CALENDLY_URL_HERE" 
+                url="https://calendly.com/luna-adhra" 
                 styles={{ height: '100%', width: '100%' }}
               />
             </div>

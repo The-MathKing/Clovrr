@@ -40,23 +40,29 @@ export async function POST(req: Request) {
     }
 
     // 3. Lookup or Create Lead
-    let { data: lead } = await supabase
+    // Look for an existing lead by contact_id and client_id
+    const { data: existingLead, error: leadError } = await supabase
       .from('leads')
       .select('id, status')
+      .eq('contact_id', from)
       .eq('client_id', client.id)
-      .eq('phone_number', from)
       .single();
 
-    if (!lead) {
+    let lead = existingLead;
+
+    if (leadError || !existingLead) {
+      // Create new lead if they don't exist
       const { data: newLead, error: leadInsertError } = await supabase
         .from('leads')
-        .insert({ client_id: client.id, phone_number: from })
+        .insert({ client_id: client.id, contact_id: from, channel: 'sms' })
         .select('id, status')
         .single();
-      
+    
       if (leadInsertError) throw new Error('Failed to create lead');
       lead = newLead;
     }
+
+    if (!lead) throw new Error('Lead could not be found or created');
 
     // 4. Save the incoming message to conversations
     await supabase.from('conversations').insert({

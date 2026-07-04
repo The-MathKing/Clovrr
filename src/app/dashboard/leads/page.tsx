@@ -1,6 +1,8 @@
 import React from 'react';
 import { createClient } from '@/utils/supabase/server';
 
+import LeadActions from './LeadActions';
+
 export default async function LeadsManager() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -34,16 +36,27 @@ export default async function LeadsManager() {
     }
   };
 
+  const getChannelIcon = (channel: string) => {
+    if (channel === 'sms') return '📱';
+    if (channel === 'email') return '✉️';
+    if (channel === 'instagram') return '📸';
+    return '💬';
+  };
+
   return (
     <div className="p-8 h-full flex flex-col">
-      <h1 className="text-2xl font-bold mb-8">Lead Manager</h1>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold">Lead Manager</h1>
+      </div>
       
+      <LeadActions />
+
       <div className="flex-1 bg-gray-900 border border-gray-800 rounded-xl overflow-hidden shadow-sm flex flex-col">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead className="bg-gray-950 border-b border-gray-800">
               <tr>
-                <th className="px-6 py-4 font-medium text-gray-400">Phone Number</th>
+                <th className="px-6 py-4 font-medium text-gray-400">Lead</th>
                 <th className="px-6 py-4 font-medium text-gray-400">Status</th>
                 <th className="px-6 py-4 font-medium text-gray-400">Date Added</th>
                 <th className="px-6 py-4 font-medium text-gray-400 text-right">Messages</th>
@@ -53,13 +66,18 @@ export default async function LeadsManager() {
               {leads.length === 0 ? (
                 <tr>
                   <td colSpan={4} className="px-6 py-12 text-center text-gray-500">
-                    No leads found. When someone texts your Twilio number, they will appear here.
+                    No leads found. Import a CSV or wait for inbound messages.
                   </td>
                 </tr>
               ) : (
                 leads.map((lead) => (
                   <tr key={lead.id} className="hover:bg-gray-800/50 transition-colors">
-                    <td className="px-6 py-4 font-medium text-white">{lead.phone_number}</td>
+                    <td className="px-6 py-4">
+                      <div className="font-medium text-white">{lead.name || 'Unknown'}</div>
+                      <div className="text-xs text-gray-400 mt-1 flex items-center gap-1">
+                        {getChannelIcon(lead.channel)} {lead.contact_id}
+                      </div>
+                    </td>
                     <td className="px-6 py-4">
                       <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${getStatusColor(lead.status)}`}>
                         {lead.status.toUpperCase()}

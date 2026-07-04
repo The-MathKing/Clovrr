@@ -1,5 +1,6 @@
 import React from 'react';
 import { createClient } from '@/utils/supabase/server';
+import IntegrationsHub from './IntegrationsHub';
 
 export default async function SettingsPage() {
   const supabase = await createClient();
@@ -43,21 +44,10 @@ export default async function SettingsPage() {
         </form>
       </div>
 
-      <div className="bg-gray-900 border border-gray-800 rounded-xl p-8 shadow-sm">
+      <div className="bg-gray-900 border border-gray-800 rounded-xl p-8 shadow-sm mb-8">
         <h2 className="text-xl font-semibold mb-6 text-white border-b border-gray-800 pb-4">Bot Configuration</h2>
         
         <form className="space-y-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-400 mb-2">Twilio Phone Number</label>
-            <input 
-              type="text" 
-              defaultValue={client?.twilio_number || 'Not assigned yet'} 
-              readOnly
-              className="w-full px-4 py-3 bg-gray-950 border border-gray-800 rounded-lg text-emerald-400 font-mono opacity-70 cursor-not-allowed focus:outline-none" 
-            />
-            <p className="mt-1 text-xs text-gray-500">This is the number your AI Concierge is listening on.</p>
-          </div>
-          
           <div>
             <label className="block text-sm font-medium text-gray-400 mb-2">Calendly Link</label>
             <input 
@@ -76,44 +66,8 @@ export default async function SettingsPage() {
           </div>
         </form>
       </div>
-      <div className="bg-gray-900 border border-gray-800 rounded-xl p-8 shadow-sm">
-        <h2 className="text-xl font-semibold mb-6 text-white border-b border-gray-800 pb-4">Omnichannel Integrations</h2>
-        
-        <div className="space-y-6">
-          <div className="flex items-center justify-between p-4 bg-gray-950 border border-gray-800 rounded-lg">
-            <div className="flex items-center gap-4">
-              <div className="text-2xl">📱</div>
-              <div>
-                <h3 className="text-white font-medium">Twilio SMS</h3>
-                <p className="text-xs text-emerald-400">Connected ({client?.twilio_number || 'Pending Assignment'})</p>
-              </div>
-            </div>
-            <button className="text-sm bg-gray-800 text-gray-300 px-3 py-1.5 rounded hover:bg-gray-700 transition-colors">Manage</button>
-          </div>
 
-          <div className="flex items-center justify-between p-4 bg-gray-950 border border-gray-800 rounded-lg">
-            <div className="flex items-center gap-4">
-              <div className="text-2xl">✉️</div>
-              <div>
-                <h3 className="text-white font-medium">Email (SendGrid)</h3>
-                <p className="text-xs text-gray-500">Not connected</p>
-              </div>
-            </div>
-            <button className="text-sm bg-emerald-600 text-white px-3 py-1.5 rounded hover:bg-emerald-500 transition-colors shadow-sm">Connect</button>
-          </div>
-
-          <div className="flex items-center justify-between p-4 bg-gray-950 border border-gray-800 rounded-lg opacity-50">
-            <div className="flex items-center gap-4">
-              <div className="text-2xl">📸</div>
-              <div>
-                <h3 className="text-white font-medium">Instagram DMs</h3>
-                <p className="text-xs text-amber-500">Requires Meta App Approval</p>
-              </div>
-            </div>
-            <button className="text-sm bg-gray-800 text-gray-300 px-3 py-1.5 rounded cursor-not-allowed">Locked</button>
-          </div>
-        </div>
-      </div>
+      <IntegrationsHub client={client} />
     </div>
   );
 }

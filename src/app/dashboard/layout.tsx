@@ -19,10 +19,10 @@ export default async function DashboardLayout({ children }: { children: React.Re
     .single();
 
   return (
-    <div className="min-h-screen bg-gray-950 flex flex-col md:flex-row text-white font-sans selection:bg-emerald-500 selection:text-white">
+    <div className="min-h-screen bg-black flex flex-col md:flex-row text-gray-300 font-sans selection:bg-emerald-500/30 selection:text-emerald-200">
       {/* Sidebar */}
-      <aside className="w-full md:w-64 bg-gray-900 border-r border-gray-800 flex flex-col">
-        <div className="h-16 flex items-center px-6 border-b border-gray-800">
+      <aside className="w-full md:w-64 bg-[#0a0a0a] border-r border-white/5 flex flex-col">
+        <div className="h-14 flex items-center px-6 border-b border-white/5">
           <a href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <svg viewBox="0 0 100 100" className="w-6 h-6 text-emerald-500" fill="currentColor">
               <circle cx="50" cy="25" r="18" />
@@ -75,7 +75,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col h-screen overflow-y-auto bg-gray-950">
+      <main className="flex-1 flex flex-col h-screen overflow-y-auto bg-black">
         {children}
       </main>
     </div>

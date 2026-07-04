@@ -3,15 +3,18 @@ import { createClient } from '@supabase/supabase-js';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import twilio from 'twilio';
 
-// Initialize services
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
-const twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
-
 export async function POST(req: Request) {
+  // Initialize services inside handler to prevent build-time crashes when env vars are missing
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
+    process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder'
+  );
+  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || 'placeholder');
+  const twilioClient = twilio(
+    process.env.TWILIO_ACCOUNT_SID || 'ACplaceholder', 
+    process.env.TWILIO_AUTH_TOKEN || 'placeholder'
+  );
+
   try {
     // 1. Parse the incoming Twilio Webhook
     const text = await req.text();
@@ -48,7 +51,7 @@ export async function POST(req: Request) {
       const { data: newLead, error: leadInsertError } = await supabase
         .from('leads')
         .insert({ client_id: client.id, phone_number: from })
-        .select('id')
+        .select('id, status')
         .single();
       
       if (leadInsertError) throw new Error('Failed to create lead');

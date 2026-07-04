@@ -2,7 +2,7 @@ import React from 'react';
 import { createClient } from '@/utils/supabase/server';
 
 export default async function SettingsPage() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
   // Fetch client details

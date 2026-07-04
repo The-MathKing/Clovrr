@@ -19,9 +19,14 @@ export default function Home() {
               </svg>
               <span className="font-bold text-xl tracking-tight text-white">Clovrr</span>
             </div>
-            <a href="/demo" className="bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2 rounded-lg font-medium transition-colors text-sm shadow-lg shadow-emerald-900/50">
-              Book Demo
-            </a>
+            <div className="flex items-center gap-6">
+              <a href="/login" className="text-sm font-medium text-gray-400 hover:text-white transition-colors">
+                Client Login
+              </a>
+              <a href="/demo" className="bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2 rounded-lg font-medium transition-colors text-sm shadow-lg shadow-emerald-900/50">
+                Book Demo
+              </a>
+            </div>
           </div>
         </div>
       </nav>

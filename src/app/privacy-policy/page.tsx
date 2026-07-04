@@ -22,9 +22,14 @@ export default function PrivacyPolicy() {
             </svg>
             <span className="font-bold text-xl tracking-tight text-white">Clovrr</span>
           </a>
-          <a href="/" className="text-sm font-medium text-gray-400 hover:text-white transition-colors">
-            Back to Home
-          </a>
+          <div className="flex items-center gap-6">
+            <a href="/login" className="text-sm font-medium text-gray-400 hover:text-white transition-colors">
+              Client Login
+            </a>
+            <a href="/" className="text-sm font-medium text-gray-400 hover:text-white transition-colors">
+              Back to Home
+            </a>
+          </div>
         </div>
       </nav>
 

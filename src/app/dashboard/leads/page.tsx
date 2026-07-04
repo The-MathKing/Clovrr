@@ -51,10 +51,11 @@ export default async function LeadsManager() {
       
       <LeadActions />
 
-      <div className="flex-1 bg-gray-900 border border-gray-800 rounded-xl overflow-hidden shadow-sm flex flex-col">
+      <div className="flex-1 bg-[#0a0a0a] border border-white/5 rounded-xl overflow-hidden shadow-2xl flex flex-col relative">
+        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
-            <thead className="bg-gray-950 border-b border-gray-800">
+            <thead className="bg-black border-b border-white/5">
               <tr>
                 <th className="px-6 py-4 font-medium text-gray-400">Lead</th>
                 <th className="px-6 py-4 font-medium text-gray-400">Status</th>
@@ -62,7 +63,7 @@ export default async function LeadsManager() {
                 <th className="px-6 py-4 font-medium text-gray-400 text-right">Messages</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-800">
+            <tbody className="divide-y divide-white/5">
               {leads.length === 0 ? (
                 <tr>
                   <td colSpan={4} className="px-6 py-12 text-center text-gray-500">
@@ -71,7 +72,7 @@ export default async function LeadsManager() {
                 </tr>
               ) : (
                 leads.map((lead) => (
-                  <tr key={lead.id} className="hover:bg-gray-800/50 transition-colors">
+                  <tr key={lead.id} className="hover:bg-white/5 transition-colors">
                     <td className="px-6 py-4">
                       <div className="font-medium text-white">{lead.name || 'Unknown'}</div>
                       <div className="text-xs text-gray-400 mt-1 flex items-center gap-1">
@@ -79,14 +80,14 @@ export default async function LeadsManager() {
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${getStatusColor(lead.status)}`}>
-                        {lead.status.toUpperCase()}
+                      <span className={`px-3 py-1 rounded-full text-[10px] font-semibold border uppercase tracking-wider ${getStatusColor(lead.status)}`}>
+                        {lead.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-gray-400">
+                    <td className="px-6 py-4 text-gray-400 text-xs">
                       {new Date(lead.created_at).toLocaleDateString()}
                     </td>
-                    <td className="px-6 py-4 text-right text-gray-400">
+                    <td className="px-6 py-4 text-right text-gray-400 text-xs">
                       {lead.conversations?.length || 0} msgs
                     </td>
                   </tr>

@@ -76,6 +76,44 @@ export default async function SettingsPage() {
           </div>
         </form>
       </div>
+      <div className="bg-gray-900 border border-gray-800 rounded-xl p-8 shadow-sm">
+        <h2 className="text-xl font-semibold mb-6 text-white border-b border-gray-800 pb-4">Omnichannel Integrations</h2>
+        
+        <div className="space-y-6">
+          <div className="flex items-center justify-between p-4 bg-gray-950 border border-gray-800 rounded-lg">
+            <div className="flex items-center gap-4">
+              <div className="text-2xl">📱</div>
+              <div>
+                <h3 className="text-white font-medium">Twilio SMS</h3>
+                <p className="text-xs text-emerald-400">Connected ({client?.twilio_number || 'Pending Assignment'})</p>
+              </div>
+            </div>
+            <button className="text-sm bg-gray-800 text-gray-300 px-3 py-1.5 rounded hover:bg-gray-700 transition-colors">Manage</button>
+          </div>
+
+          <div className="flex items-center justify-between p-4 bg-gray-950 border border-gray-800 rounded-lg">
+            <div className="flex items-center gap-4">
+              <div className="text-2xl">✉️</div>
+              <div>
+                <h3 className="text-white font-medium">Email (SendGrid)</h3>
+                <p className="text-xs text-gray-500">Not connected</p>
+              </div>
+            </div>
+            <button className="text-sm bg-emerald-600 text-white px-3 py-1.5 rounded hover:bg-emerald-500 transition-colors shadow-sm">Connect</button>
+          </div>
+
+          <div className="flex items-center justify-between p-4 bg-gray-950 border border-gray-800 rounded-lg opacity-50">
+            <div className="flex items-center gap-4">
+              <div className="text-2xl">📸</div>
+              <div>
+                <h3 className="text-white font-medium">Instagram DMs</h3>
+                <p className="text-xs text-amber-500">Requires Meta App Approval</p>
+              </div>
+            </div>
+            <button className="text-sm bg-gray-800 text-gray-300 px-3 py-1.5 rounded cursor-not-allowed">Locked</button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

@@ -30,7 +30,7 @@ export async function POST(req: Request) {
     // 2. Lookup Client by 'To' number
     const { data: client, error: clientError } = await supabase
       .from('clients')
-      .select('id, name, calendly_link')
+      .select('id, name, calendly_link, system_prompt, twilio_account_sid, twilio_auth_token')
       .eq('twilio_number', to)
       .single();
 
@@ -85,31 +85,26 @@ export async function POST(req: Request) {
       parts: [{ text: msg.content }]
     }));
 
-    const systemPrompt = `You are an expert AI Lead Concierge named Clovrr, acting on behalf of ${client.name}, an independent insurance agency. Your sole objective is to re-engage past prospects who requested a quote but stalled out, or existing single-policy clients who qualify for a bundle discount.
+    // Build the dynamic system prompt
+    const baseSystemPrompt = client.system_prompt || `You are an expert AI Lead Concierge for ${client.name}. Your objective is to help the user and encourage them to book a time.`;
+    
+    const systemPrompt = `${baseSystemPrompt}
 
 ### CONTEXT FOR THIS CONVERSATION:
 - Prospect Name: ${lead.name || 'Friend'}
-- Campaign Type: Inbound Response
-- Original Inquiry/Policy: ${lead.context || 'They texted us directly'}
+- Original Inquiry/Context: ${lead.context || 'They texted us directly'}
 
 ### CORE BEHAVIOR RULES:
-1. BREVITY IS KING: People read texts and quick emails on the move. Keep every single response under 160 characters (1-2 sentences maximum). Do not write blocks of text.
-2. NATURAL & TONED-DOWN: Do not sound like a marketing bot. Do not use corporate fluff ("I hope this email finds you well", "Valued customer"). Write like a busy but helpful account manager. Use lowercase naturally if texting.
-3. STRICT PERSISTENCE: If the prospect is vague, gently guide them back to booking a time. 
-4. NO INVENTING POLICY DETAILS: Never quote exact premiums or coverage numbers unless explicitly provided in the context data. If asked for pricing, say: "Rates change daily, let's grab 5 mins for the agent to pull up the exact numbers for you."
-
-### CONVERSATIONAL FLOW:
-- Step 1 (Opening): Acknowledge the context immediately. Ask a direct, low-friction question.
-- Step 2 (Qualification & Handling): Answer any basic questions, overcome objections (e.g., "Too busy" -> "Totally get it, that's why we can text you the quote instead. What's a good day?").
-- Step 3 (The Close): When they show any intent or curiosity, immediately offer a clean booking bridge. Do not ask "When are you free?" Instead, provide an option: "Does tomorrow morning or Wednesday afternoon work better for a quick call?"
-Always use this link when offering to book: ${client.calendly_link || 'our booking calendar'}
+1. BREVITY IS KING: People read texts on the move. Keep every single response under 160 characters (1-2 sentences maximum). Do not write blocks of text.
+2. NATURAL & TONED-DOWN: Do not sound like a marketing bot.
+3. BOOKING: Always use this exact link when offering to book: ${client.calendly_link || 'our booking calendar'}
 
 ### COMPLIANCE GUARDRAILS:
 - If the user uses the words "STOP", "UNSUBSCRIBE", "REMOVE", or expresses anger/explicit disinterest, immediately reply with exactly: "Understood. You have been opted out." and append the tag [STATUS: OPT_OUT] to the end of your response for the backend to read.`;
 
     // 6. Get AI Response from Gemini
     const model = genAI.getGenerativeModel({ 
-      model: 'gemini-1.5-pro',
+      model: 'gemini-1.5-flash',
       systemInstruction: systemPrompt 
     });
 
@@ -134,7 +129,13 @@ Always use this link when offering to book: ${client.calendly_link || 'our booki
     });
 
     // 9. Send SMS back via Twilio
-    await twilioClient.messages.create({
+    // Use the client's specific credentials if available, otherwise fallback to master credentials
+    const clientTwilio = twilio(
+      client.twilio_account_sid || process.env.TWILIO_ACCOUNT_SID,
+      client.twilio_auth_token || process.env.TWILIO_AUTH_TOKEN
+    );
+
+    await clientTwilio.messages.create({
       body: aiResponse,
       from: to,
       to: from

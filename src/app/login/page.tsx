@@ -1,4 +1,4 @@
-import { login, signInWithGoogle } from './actions';
+import { login, signup, signInWithGoogle } from './actions';
 
 export default function LoginPage({ searchParams }: { searchParams: { message: string } }) {
   return (
@@ -63,12 +63,18 @@ export default function LoginPage({ searchParams }: { searchParams: { message: s
               </p>
             )}
 
-            <div>
+            <div className="flex gap-4">
               <button
-                type="submit"
+                formAction={login}
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-colors"
               >
                 Sign in
+              </button>
+              <button
+                formAction={signup}
+                className="w-full flex justify-center py-2 px-4 border border-gray-700 rounded-md shadow-sm text-sm font-medium text-gray-300 bg-gray-900 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-colors"
+              >
+                Sign up
               </button>
             </div>
           </form>

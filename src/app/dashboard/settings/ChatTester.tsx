@@ -3,7 +3,9 @@
 import React, { useRef, useEffect, useState } from 'react';
 
 export default function ChatTester() {
-  const [messages, setMessages] = useState<any[]>([]);
+  const [messages, setMessages] = useState<any[]>([
+    { id: 'initial', role: 'assistant', content: 'Hi! I am the AI Concierge. How can I help you today?' }
+  ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

@@ -1,6 +1,7 @@
 import React from 'react';
 import { createClient } from '@/utils/supabase/server';
 import IntegrationsHub from './IntegrationsHub';
+import PersonaForm from './PersonaForm';
 
 export default async function SettingsPage() {
   const supabase = await createClient();
@@ -49,24 +50,7 @@ export default async function SettingsPage() {
         <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
         <h2 className="text-xl font-semibold mb-6 text-white border-b border-white/5 pb-4">Bot Configuration</h2>
         
-        <form className="space-y-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-400 mb-2">Calendly Link</label>
-            <input 
-              type="text" 
-              defaultValue={client?.calendly_link || ''} 
-              className="w-full px-4 py-3 bg-black border border-white/10 rounded-lg text-white focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors" 
-              placeholder="https://calendly.com/your-name/demo"
-            />
-            <p className="mt-1 text-xs text-gray-500">The AI will use this exact link when it qualifies a lead and tries to book a meeting.</p>
-          </div>
-          
-          <div className="pt-4">
-            <button type="button" className="bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-2.5 rounded-lg font-medium transition-colors shadow-lg shadow-emerald-900/20">
-              Save Configuration
-            </button>
-          </div>
-        </form>
+        <PersonaForm client={client} />
       </div>
 
       <IntegrationsHub client={client} />

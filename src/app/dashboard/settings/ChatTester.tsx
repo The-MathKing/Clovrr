@@ -2,9 +2,10 @@
 
 import React, { useRef, useEffect, useState } from 'react';
 
-export default function ChatTester() {
+export default function ChatTester({ initialMessage }: { initialMessage?: string }) {
+  const defaultInitial = "Hi there! We noticed you were interested in our services. Are you still looking to book a demo?";
   const [messages, setMessages] = useState<any[]>([
-    { id: 'initial', role: 'assistant', content: 'Hi! I am the AI Concierge. How can I help you today?' }
+    { id: 'initial', role: 'assistant', content: initialMessage || defaultInitial }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);

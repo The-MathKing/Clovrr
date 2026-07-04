@@ -10,13 +10,14 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { system_prompt, calendly_link } = await request.json();
+    const { system_prompt, calendly_link, initial_message } = await request.json();
 
     const { error } = await supabase
       .from('clients')
       .update({ 
         system_prompt,
-        calendly_link
+        calendly_link,
+        initial_message
       })
       .eq('email', user.email);
 

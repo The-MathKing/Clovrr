@@ -6,7 +6,8 @@ export default function PersonaForm({ client }: { client: any }) {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     calendly_link: client?.calendly_link || '',
-    system_prompt: client?.system_prompt || 'You are a helpful and professional AI receptionist for a small business. Your goal is to answer basic questions and encourage the user to book an appointment using the provided Calendly link.'
+    system_prompt: client?.system_prompt || 'You are a helpful and professional AI receptionist for a small business. Your goal is to answer basic questions and encourage the user to book an appointment using the provided Calendly link.',
+    initial_message: client?.initial_message || 'Hi there! We noticed you were interested in our services. Are you still looking to book a demo?'
   });
 
   const handleSave = async (e: React.FormEvent) => {
@@ -42,6 +43,18 @@ export default function PersonaForm({ client }: { client: any }) {
           placeholder="You are Sarah, a helpful assistant for Bob's Plumbing..."
         />
         <p className="mt-1 text-xs text-gray-500">Instruct the AI on how to behave, what tone to use, and what information to collect.</p>
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-400 mb-2">Initial Outbound Message</label>
+        <textarea 
+          rows={2}
+          value={formData.initial_message} 
+          onChange={e => setFormData({...formData, initial_message: e.target.value})}
+          className="w-full px-4 py-3 bg-black border border-white/10 rounded-lg text-white focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors" 
+          placeholder="Hi [Name], this is Bob's Plumbing. Are you still looking for help?"
+        />
+        <p className="mt-1 text-xs text-gray-500">This is the very first text message sent to the lead to initiate the conversation.</p>
       </div>
 
       <div>

@@ -55,7 +55,7 @@ export default async function SettingsPage() {
         <PersonaForm client={client} />
       </div>
 
-      <ChatTester />
+      <ChatTester initialMessage={client?.initial_message} />
 
       <IntegrationsHub client={client} />
       </div>

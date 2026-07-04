@@ -1,17 +1,71 @@
 'use client';
 
-import React, { useRef, useEffect } from 'react';
-import { useChat } from '@ai-sdk/react';
+import React, { useRef, useEffect, useState } from 'react';
 
 export default function ChatTester() {
-  const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
-    api: '/api/settings/chat-test',
-  });
+  const [messages, setMessages] = useState<any[]>([]);
+  const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  const onFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim() || isLoading) return;
+
+    const currentInput = input;
+    const newMessages = [...messages, { id: Date.now().toString(), role: 'user', content: currentInput }];
+    
+    setMessages(newMessages);
+    setInput('');
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const res = await fetch('/api/settings/chat-test', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: newMessages })
+      });
+
+      if (!res.ok) throw new Error(await res.text());
+
+      const reader = res.body?.getReader();
+      if (!reader) throw new Error('No reader');
+      const decoder = new TextDecoder();
+      let text = '';
+      
+      setMessages(prev => [...prev, { id: 'assistant-' + Date.now(), role: 'assistant', content: '' }]);
+
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        
+        const chunk = decoder.decode(value, { stream: true });
+        text += chunk;
+        
+        setMessages(prev => {
+          const newM = [...prev];
+          newM[newM.length - 1].content = text;
+          return newM;
+        });
+      }
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || 'Failed to send message');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value);
+  };
+
 
   return (
     <div className="bg-[#0a0a0a] border border-white/5 rounded-xl p-8 shadow-sm mb-8 relative overflow-hidden flex flex-col h-[500px]">
@@ -48,13 +102,21 @@ export default function ChatTester() {
             </div>
           </div>
         )}
+        {error && (
+          <div className="flex justify-center">
+            <div className="bg-red-500/20 text-red-200 border border-red-500/50 rounded-lg px-4 py-2 text-xs">
+              Error: {error.message}
+            </div>
+          </div>
+        )}
         <div ref={messagesEndRef} />
       </div>
 
-      <form onSubmit={handleSubmit} className="mt-4 relative">
+      <form onSubmit={onFormSubmit} className="mt-4 relative">
         <input
+          name="prompt"
           value={input}
-          onChange={handleInputChange}
+          onChange={onInputChange}
           placeholder="Type a message to your bot..."
           className="w-full bg-black border border-white/10 rounded-full pl-4 pr-12 py-3 text-sm text-white focus:outline-none focus:border-emerald-500 transition-colors"
         />

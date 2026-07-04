@@ -2,6 +2,7 @@ import React from 'react';
 import { createClient } from '@/utils/supabase/server';
 import IntegrationsHub from './IntegrationsHub';
 import PersonaForm from './PersonaForm';
+import ChatTester from './ChatTester';
 
 export default async function SettingsPage() {
   const supabase = await createClient();
@@ -52,6 +53,8 @@ export default async function SettingsPage() {
         
         <PersonaForm client={client} />
       </div>
+
+      <ChatTester />
 
       <IntegrationsHub client={client} />
     </div>

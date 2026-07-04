@@ -1,6 +1,10 @@
 import { createClient } from '@/utils/supabase/server';
-import { google } from '@ai-sdk/google';
+import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { streamText } from 'ai';
+
+const googleProvider = createGoogleGenerativeAI({
+  apiKey: process.env.GEMINI_API_KEY || '',
+});
 
 export const maxDuration = 30;
 
@@ -41,7 +45,7 @@ export async function POST(req: Request) {
 `;
 
     const result = await streamText({
-      model: google('gemini-1.5-flash'),
+      model: googleProvider('gemini-1.5-flash'),
       system: systemPrompt,
       messages,
     });

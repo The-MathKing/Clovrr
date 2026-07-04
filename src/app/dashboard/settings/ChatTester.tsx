@@ -60,7 +60,7 @@ export default function ChatTester() {
         />
         <button 
           type="submit" 
-          disabled={!input.trim() || isLoading}
+          disabled={!(input || '').trim() || isLoading}
           className="absolute right-2 top-1/2 -translate-y-1/2 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:hover:bg-emerald-600 text-white w-8 h-8 rounded-full flex items-center justify-center transition-colors"
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 translate-x-px">

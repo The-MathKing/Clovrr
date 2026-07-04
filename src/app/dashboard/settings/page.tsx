@@ -16,10 +16,11 @@ export default async function SettingsPage() {
     .single();
 
   return (
-    <div className="p-8 max-w-3xl">
+    <div className="p-8 max-w-7xl mx-auto w-full">
       <h1 className="text-2xl font-bold mb-8">Settings</h1>
       
-      <div className="bg-[#0a0a0a] border border-white/5 rounded-xl p-8 shadow-sm mb-8 relative overflow-hidden">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+        <div className="bg-[#0a0a0a] border border-white/5 rounded-xl p-8 shadow-sm relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
         <h2 className="text-xl font-semibold mb-6 text-white border-b border-white/5 pb-4">Agency Profile</h2>
         
@@ -47,7 +48,7 @@ export default async function SettingsPage() {
         </form>
       </div>
 
-      <div className="bg-[#0a0a0a] border border-white/5 rounded-xl p-8 shadow-sm mb-8 relative overflow-hidden">
+      <div className="bg-[#0a0a0a] border border-white/5 rounded-xl p-8 shadow-sm relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
         <h2 className="text-xl font-semibold mb-6 text-white border-b border-white/5 pb-4">Bot Configuration</h2>
         
@@ -57,6 +58,7 @@ export default async function SettingsPage() {
       <ChatTester />
 
       <IntegrationsHub client={client} />
+      </div>
     </div>
   );
 }

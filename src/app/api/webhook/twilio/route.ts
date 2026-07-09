@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { syncLeadToCRMs } from '@/utils/crm';
 
 export async function POST(req: Request) {
   // Initialize services inside handler to prevent build-time crashes when env vars are missing
@@ -25,7 +26,7 @@ export async function POST(req: Request) {
     // 2. Lookup Client by 'To' number
     const { data: client, error: clientError } = await supabase
       .from('clients')
-      .select('id, name, calendly_link, system_prompt, twilio_account_sid, twilio_auth_token')
+      .select('id, name, calendly_link, system_prompt, twilio_account_sid, twilio_auth_token, ghl_api_key, ghl_location_id, hubspot_access_token')
       .eq('twilio_number', to)
       .single();
 
@@ -148,6 +149,9 @@ export async function POST(req: Request) {
       leadUpdates.status = newStatus;
     }
     await supabase.from('leads').update(leadUpdates).eq('id', lead.id);
+
+    // 11. Sync to CRM (async, non-blocking if we omit await, but safer to await here since Vercel might kill the function)
+    await syncLeadToCRMs(client, lead, newStatus === 'qualified' || newStatus === 'booked');
 
     return new NextResponse('OK', { status: 200 });
 

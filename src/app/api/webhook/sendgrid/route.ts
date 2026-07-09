@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import sgMail from '@sendgrid/mail';
+import { syncLeadToCRMs } from '@/utils/crm';
 
 export async function POST(req: Request) {
   const supabase = createClient(
@@ -34,7 +35,7 @@ export async function POST(req: Request) {
     // Find the client using the receiving email
     const { data: client } = await supabase
       .from('clients')
-      .select('id, name, calendly_link, system_prompt, sendgrid_api_key, sendgrid_from_email')
+      .select('id, name, calendly_link, system_prompt, sendgrid_api_key, sendgrid_from_email, ghl_api_key, ghl_location_id, hubspot_access_token')
       .eq('sendgrid_from_email', toEmail)
       .single();
 
@@ -156,6 +157,8 @@ export async function POST(req: Request) {
       leadUpdates.status = newStatus;
     }
     await supabase.from('leads').update(leadUpdates).eq('id', lead.id);
+
+    await syncLeadToCRMs(client, lead, newStatus === 'qualified' || newStatus === 'booked');
 
     return new NextResponse('OK', { status: 200 });
   } catch (error: any) {

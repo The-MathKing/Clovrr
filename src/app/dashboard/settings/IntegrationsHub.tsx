@@ -8,6 +8,9 @@ type IntegrationsClientData = {
   twilio_auth_token?: string;
   sendgrid_api_key?: string;
   sendgrid_from_email?: string;
+  ghl_api_key?: string;
+  ghl_location_id?: string;
+  hubspot_access_token?: string;
   avg_policy_value?: number;
 };
 
@@ -20,6 +23,9 @@ export default function IntegrationsHub({ client }: { client: IntegrationsClient
     twilio_auth_token: client?.twilio_auth_token || '',
     sendgrid_api_key: client?.sendgrid_api_key || '',
     sendgrid_from_email: client?.sendgrid_from_email || '',
+    ghl_api_key: client?.ghl_api_key || '',
+    ghl_location_id: client?.ghl_location_id || '',
+    hubspot_access_token: client?.hubspot_access_token || '',
     avg_policy_value: client?.avg_policy_value || 500,
   });
 
@@ -101,6 +107,38 @@ export default function IntegrationsHub({ client }: { client: IntegrationsClient
           <button disabled className="text-sm bg-[#1a1a1a] border border-gray-800 text-gray-500 px-4 py-1.5 rounded-md">Locked</button>
         </div>
 
+        {/* GoHighLevel */}
+        <div className="flex items-center justify-between p-4 bg-[#111] border border-gray-800/50 rounded-lg hover:border-gray-700 transition-colors">
+          <div className="flex items-center gap-4">
+            <div className="text-2xl opacity-80">🏢</div>
+            <div>
+              <h3 className="text-white font-medium text-sm">GoHighLevel (CRM)</h3>
+              <p className="text-xs text-gray-400 mt-0.5">
+                {client?.ghl_api_key ? 'Connected' : 'Not configured'}
+              </p>
+            </div>
+          </div>
+          <button onClick={() => setActiveModal('gohighlevel')} className="text-sm bg-[#1a1a1a] border border-gray-800 text-gray-300 px-4 py-1.5 rounded-md hover:bg-gray-800 hover:text-white transition-all">
+            {client?.ghl_api_key ? 'Manage' : 'Connect'}
+          </button>
+        </div>
+
+        {/* HubSpot */}
+        <div className="flex items-center justify-between p-4 bg-[#111] border border-gray-800/50 rounded-lg hover:border-gray-700 transition-colors">
+          <div className="flex items-center gap-4">
+            <div className="text-2xl opacity-80">⚙️</div>
+            <div>
+              <h3 className="text-white font-medium text-sm">HubSpot (CRM)</h3>
+              <p className="text-xs text-gray-400 mt-0.5">
+                {client?.hubspot_access_token ? 'Connected' : 'Not configured'}
+              </p>
+            </div>
+          </div>
+          <button onClick={() => setActiveModal('hubspot')} className="text-sm bg-[#1a1a1a] border border-gray-800 text-gray-300 px-4 py-1.5 rounded-md hover:bg-gray-800 hover:text-white transition-all">
+            {client?.hubspot_access_token ? 'Manage' : 'Connect'}
+          </button>
+        </div>
+
         {/* Business Settings */}
         <div className="flex items-center justify-between p-4 bg-[#111] border border-gray-800/50 rounded-lg hover:border-gray-700 transition-colors">
           <div className="flex items-center gap-4">
@@ -125,7 +163,11 @@ export default function IntegrationsHub({ client }: { client: IntegrationsClient
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 to-emerald-900"></div>
             <div className="p-6">
               <h3 className="text-lg font-semibold text-white mb-4">
-                {activeModal === 'twilio' ? 'Configure Twilio SMS' : 'Configure SendGrid'}
+                {activeModal === 'twilio' && 'Configure Twilio SMS'}
+                {activeModal === 'sendgrid' && 'Configure SendGrid'}
+                {activeModal === 'gohighlevel' && 'Configure GoHighLevel'}
+                {activeModal === 'hubspot' && 'Configure HubSpot'}
+                {activeModal === 'business' && 'Configure Business Metrics'}
               </h3>
               
               <form onSubmit={handleSave} className="space-y-4">
@@ -171,6 +213,32 @@ export default function IntegrationsHub({ client }: { client: IntegrationsClient
                     <div>
                       <label className="block text-xs font-medium text-gray-400 mb-1">API Key</label>
                       <input type="password" value={formData.sendgrid_api_key} onChange={e => setFormData({...formData, sendgrid_api_key: e.target.value})} className="w-full bg-[#0a0a0a] border border-gray-800 rounded p-2.5 text-sm text-white focus:border-emerald-500 focus:outline-none transition-colors" placeholder="SG.xxx..." />
+                    </div>
+                  </>
+                )}
+                {activeModal === 'gohighlevel' && (
+                  <>
+                    <div className="mb-4 text-xs text-gray-400 bg-[#1a1a1a] p-3 rounded border border-gray-800">
+                      <p className="mb-2">Connect your GoHighLevel sub-account API.</p>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-400 mb-1">API Key</label>
+                      <input type="password" value={formData.ghl_api_key} onChange={e => setFormData({...formData, ghl_api_key: e.target.value})} className="w-full bg-[#0a0a0a] border border-gray-800 rounded p-2.5 text-sm text-white focus:border-emerald-500 focus:outline-none transition-colors" placeholder="GHL API Key" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-400 mb-1">Location ID</label>
+                      <input type="text" value={formData.ghl_location_id} onChange={e => setFormData({...formData, ghl_location_id: e.target.value})} className="w-full bg-[#0a0a0a] border border-gray-800 rounded p-2.5 text-sm text-white focus:border-emerald-500 focus:outline-none transition-colors" placeholder="Location ID" />
+                    </div>
+                  </>
+                )}
+                {activeModal === 'hubspot' && (
+                  <>
+                    <div className="mb-4 text-xs text-gray-400 bg-[#1a1a1a] p-3 rounded border border-gray-800">
+                      <p className="mb-2">Connect your HubSpot account via Private App Access Token.</p>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-400 mb-1">Access Token</label>
+                      <input type="password" value={formData.hubspot_access_token} onChange={e => setFormData({...formData, hubspot_access_token: e.target.value})} className="w-full bg-[#0a0a0a] border border-gray-800 rounded p-2.5 text-sm text-white focus:border-emerald-500 focus:outline-none transition-colors" placeholder="pat-na1-..." />
                     </div>
                   </>
                 )}

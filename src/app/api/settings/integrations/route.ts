@@ -20,6 +20,9 @@ export async function POST(request: Request) {
     if (body.sendgrid_from_email !== undefined) updates.sendgrid_from_email = body.sendgrid_from_email;
     if (body.avg_policy_value !== undefined) updates.avg_policy_value = body.avg_policy_value;
     if (body.twilio_number !== undefined) updates.twilio_number = body.twilio_number;
+    if (body.ghl_api_key !== undefined) updates.ghl_api_key = body.ghl_api_key;
+    if (body.ghl_location_id !== undefined) updates.ghl_location_id = body.ghl_location_id;
+    if (body.hubspot_access_token !== undefined) updates.hubspot_access_token = body.hubspot_access_token;
 
     if (Object.keys(updates).length > 0) {
       await supabase

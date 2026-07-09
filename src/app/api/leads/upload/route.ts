@@ -16,22 +16,29 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { leads } = body;
 
-    const formattedLeads = leads.map((lead: Record<string, string>) => ({
-      client_id: clientRes.data.id,
-      name: lead.name || null,
-      contact_id: lead.contact_id,
-      channel: (lead.channel || 'sms').toLowerCase(),
-      context: lead.context || null,
-      status: 'new'
-    }));
+    const formattedLeads = leads.map((lead: Record<string, string>) => {
+      const contact = lead.contact_id || lead.Phone || lead.phone || lead.Email || lead.email || '';
+      const email = lead.Email || lead.email || null;
+      const inferredChannel = (lead.Phone || lead.phone) ? 'sms' : (email ? 'email' : 'sms');
+      
+      return {
+        client_id: clientRes.data.id,
+        name: lead.name || lead.Name || null,
+        contact_id: contact,
+        email: email,
+        channel: (lead.channel || inferredChannel).toLowerCase(),
+        context: lead.context || lead['Inquiry Context'] || null,
+        status: 'new'
+      };
+    });
 
     const { error } = await supabase.from('leads').insert(formattedLeads);
     
     if (error) throw error;
 
     return NextResponse.json({ success: true, count: formattedLeads.length });
-  } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : String(err);
+  } catch (err: any) {
+    const message = err?.message || err?.details || String(err);
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

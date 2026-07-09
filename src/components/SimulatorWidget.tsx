@@ -63,7 +63,10 @@ export default function SimulatorWidget() {
         body: JSON.stringify({ messages: newMessages })
       });
 
-      if (!res.ok) throw new Error('API Error');
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || 'Server responded with a status error');
+      }
 
       const data = await res.json();
       
@@ -71,10 +74,10 @@ export default function SimulatorWidget() {
         ...prev, 
         { id: Date.now().toString(), role: 'assistant', content: data.text }
       ]);
-    } catch (err) {
+    } catch (err: any) {
       setMessages((prev) => [
         ...prev, 
-        { id: Date.now().toString(), role: 'assistant', content: "Oops, something went wrong on our end! (Error connecting to AI)" }
+        { id: Date.now().toString(), role: 'assistant', content: `Oops! API Error: ${err.message}` }
       ]);
     } finally {
       setIsTyping(false);

@@ -27,8 +27,14 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Missing required fields or leads array is empty' }, { status: 400 });
     }
 
+    const { createClient: createAdminClient } = require('@supabase/supabase-js');
+    const supabaseAdmin = createAdminClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+      process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+    );
+
     // 1. Create the Campaign
-    const { data: campaign, error: campaignError } = await supabase
+    const { data: campaign, error: campaignError } = await supabaseAdmin
       .from('campaigns')
       .insert({
         client_id: client.id,
@@ -59,7 +65,7 @@ export async function POST(req: Request) {
 
     // 3. Batch insert leads (using contact_id instead of phone_number)
     // We'll upsert based on client_id and contact_id
-    const { error: leadsError } = await supabase
+    const { error: leadsError } = await supabaseAdmin
       .from('leads')
       .upsert(leadsToInsert, { onConflict: 'client_id, contact_id' });
 

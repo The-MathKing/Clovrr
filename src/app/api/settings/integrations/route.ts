@@ -25,10 +25,16 @@ export async function POST(request: Request) {
     if (body.hubspot_access_token !== undefined) updates.hubspot_access_token = body.hubspot_access_token;
 
     if (Object.keys(updates).length > 0) {
-      await supabase
+      const { createClient: createAdminClient } = require('@supabase/supabase-js');
+      const supabaseAdmin = createAdminClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+        process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+      );
+
+      await supabaseAdmin
         .from('clients')
         .update(updates)
-        .eq('email', user.email);
+        .eq('email', user.email || '');
     }
 
     return NextResponse.json({ success: true });

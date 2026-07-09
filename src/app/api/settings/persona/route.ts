@@ -12,14 +12,20 @@ export async function POST(request: Request) {
 
     const { system_prompt, calendly_link, initial_message } = await request.json();
 
-    const { error } = await supabase
+    const { createClient: createAdminClient } = require('@supabase/supabase-js');
+    const supabaseAdmin = createAdminClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+      process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+    );
+
+    const { error } = await supabaseAdmin
       .from('clients')
       .update({ 
         system_prompt,
         calendly_link,
         initial_message
       })
-      .eq('email', user.email);
+      .eq('email', user.email || '');
 
     if (error) {
       console.error('Error updating persona:', error);

@@ -32,7 +32,13 @@ export async function POST(req: Request) {
       };
     });
 
-    const { error } = await supabase.from('leads').insert(formattedLeads);
+    const { createClient: createAdminClient } = require('@supabase/supabase-js');
+    const supabaseAdmin = createAdminClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+      process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+    );
+
+    const { error } = await supabaseAdmin.from('leads').insert(formattedLeads);
     
     if (error) throw error;
 

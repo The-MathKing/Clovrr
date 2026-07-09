@@ -14,18 +14,14 @@ const PROMPTS = [
   { label: 'Auto Insurance', text: 'How much does your full coverage auto insurance cost?' }
 ];
 
-const RESPONSES: Record<string, string> = {
-  'I need a quote for a new roof on my house.': "Hi there! We'd love to help you with your roof. Let's get you a quote. Pick a quick time to chat here: clovrr.com/book",
-  'Do you guys handle commercial plumbing jobs?': "Yes we do! Our commercial team is ready to help. Book a quick discovery call here: clovrr.com/book",
-  'How much does your full coverage auto insurance cost?': "We offer great auto rates! Let's review your current policy to get an exact number. Grab a slot: clovrr.com/book"
-};
-
 export default function SimulatorWidget() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const [timer, setTimer] = useState<number | null>(null);
   const [hasResponded, setHasResponded] = useState(false);
+  const [customInput, setCustomInput] = useState('');
   const scrollRef = useRef<HTMLDivElement>(null);
+  const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // Auto-scroll to bottom
   useEffect(() => {
@@ -36,33 +32,50 @@ export default function SimulatorWidget() {
 
   // Timer logic
   useEffect(() => {
-    let interval: NodeJS.Timeout;
     if (isTyping && !hasResponded) {
-      interval = setInterval(() => {
+      timerIntervalRef.current = setInterval(() => {
         setTimer((prev) => (prev === null ? 0 : prev + 0.1));
       }, 100);
+    } else if (timerIntervalRef.current) {
+      clearInterval(timerIntervalRef.current);
     }
-    return () => clearInterval(interval);
+    return () => {
+      if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
+    };
   }, [isTyping, hasResponded]);
 
-  const handlePromptClick = (text: string) => {
-    if (isTyping || hasResponded) return; // Prevent multiple clicks
+  const handleSend = async (text: string) => {
+    if (!text.trim() || isTyping || hasResponded) return; 
     
     setMessages([{ id: Date.now().toString(), role: 'user', content: text }]);
     setIsTyping(true);
     setTimer(0);
+    setCustomInput('');
 
-    // Simulate network delay and AI processing (e.g. 1.2 to 1.8 seconds)
-    const delay = Math.floor(Math.random() * 600) + 1200; 
+    try {
+      const res = await fetch('/api/demo/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text })
+      });
 
-    setTimeout(() => {
+      if (!res.ok) throw new Error('API Error');
+
+      const data = await res.json();
+      
       setMessages((prev) => [
         ...prev, 
-        { id: Date.now().toString(), role: 'assistant', content: RESPONSES[text] }
+        { id: Date.now().toString(), role: 'assistant', content: data.text }
       ]);
+    } catch (err) {
+      setMessages((prev) => [
+        ...prev, 
+        { id: Date.now().toString(), role: 'assistant', content: "Oops, something went wrong on our end! (Error connecting to AI)" }
+      ]);
+    } finally {
       setIsTyping(false);
       setHasResponded(true);
-    }, delay);
+    }
   };
 
   const resetSimulator = () => {
@@ -70,10 +83,11 @@ export default function SimulatorWidget() {
     setIsTyping(false);
     setTimer(null);
     setHasResponded(false);
+    setCustomInput('');
   };
 
   return (
-    <div className="w-full max-w-sm mx-auto bg-black border border-white/10 rounded-[2.5rem] shadow-2xl relative overflow-hidden flex flex-col h-[600px]">
+    <div className="w-full max-w-sm mx-auto bg-black border border-white/10 rounded-[2.5rem] shadow-2xl relative overflow-hidden flex flex-col h-[650px]">
       
       {/* Top Phone Bar */}
       <div className="h-14 w-full bg-black/80 backdrop-blur-md absolute top-0 left-0 z-10 flex justify-center items-start pt-3 border-b border-white/5">
@@ -81,15 +95,15 @@ export default function SimulatorWidget() {
       </div>
 
       {/* Chat Area */}
-      <div ref={scrollRef} className="flex-1 overflow-y-auto pt-20 pb-24 px-4 space-y-4 scroll-smooth">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto pt-20 pb-36 px-4 space-y-4 scroll-smooth">
         
         {messages.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center text-center px-4 space-y-6 animate-in fade-in duration-700">
             <div className="w-16 h-16 bg-emerald-500/10 rounded-full flex items-center justify-center mb-2">
               <svg className="w-8 h-8 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
             </div>
-            <h3 className="text-white font-medium">Test the AI Concierge</h3>
-            <p className="text-sm text-gray-500 leading-relaxed">Select a scenario below to see how fast Clovrr responds to a new lead.</p>
+            <h3 className="text-white font-medium">Test the Live AI</h3>
+            <p className="text-sm text-gray-500 leading-relaxed">Send a message below and watch our live Gemini 1.5 Flash agent reply in real-time.</p>
           </div>
         ) : (
           messages.map((msg) => (
@@ -113,34 +127,54 @@ export default function SimulatorWidget() {
       </div>
 
       {/* Bottom Actions */}
-      <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black via-black/90 to-transparent pt-12 pb-6 px-4">
+      <div className="absolute bottom-0 left-0 w-full bg-black/90 backdrop-blur-md pt-4 pb-6 px-4 border-t border-white/10">
         
         {/* Timer UI */}
         {(timer !== null || hasResponded) && (
-          <div className="flex justify-center mb-4">
+          <div className="flex justify-center mb-3">
              <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-mono border transition-colors ${hasResponded ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.2)]' : 'bg-white/5 border-white/10 text-gray-400'}`}>
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-              <span>Response Time: {timer?.toFixed(1)}s</span>
+              <span>API Response: {timer?.toFixed(1)}s</span>
             </div>
           </div>
         )}
 
-        {/* Prompt Buttons */}
+        {/* Input Area */}
         {!hasResponded && !isTyping ? (
-          <div className="flex flex-col gap-2">
-            {PROMPTS.map((prompt, i) => (
+          <div className="space-y-3">
+            <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide snap-x">
+              {PROMPTS.map((prompt, i) => (
+                <button 
+                  key={i}
+                  onClick={() => handleSend(prompt.text)}
+                  className="snap-start shrink-0 whitespace-nowrap px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-xs text-gray-300 transition-colors"
+                >
+                  {prompt.label}
+                </button>
+              ))}
+            </div>
+            <form 
+              onSubmit={(e) => { e.preventDefault(); handleSend(customInput); }} 
+              className="flex items-center gap-2 bg-[#111] border border-white/10 rounded-full px-2 py-1 focus-within:border-emerald-500/50 transition-colors"
+            >
+              <input 
+                type="text" 
+                value={customInput}
+                onChange={(e) => setCustomInput(e.target.value)}
+                placeholder="Type a message..."
+                className="flex-1 bg-transparent border-none text-sm text-white px-3 py-2 focus:outline-none focus:ring-0 placeholder-gray-600"
+              />
               <button 
-                key={i}
-                onClick={() => handlePromptClick(prompt.text)}
-                className="w-full text-left px-4 py-3 bg-[#111] hover:bg-[#1a1a1a] border border-white/10 rounded-xl text-sm text-gray-300 transition-colors flex justify-between items-center group"
+                type="submit"
+                disabled={!customInput.trim()}
+                className="w-8 h-8 rounded-full bg-emerald-600 hover:bg-emerald-500 disabled:bg-white/5 disabled:text-gray-600 text-white flex items-center justify-center transition-colors"
               >
-                <span>{prompt.label}</span>
-                <svg className="w-4 h-4 text-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
+                <svg className="w-4 h-4 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
               </button>
-            ))}
+            </form>
           </div>
         ) : hasResponded ? (
-          <div className="flex justify-center">
+          <div className="flex justify-center mt-2">
             <button 
               onClick={resetSimulator}
               className="text-sm text-gray-400 hover:text-white underline underline-offset-4 transition-colors"

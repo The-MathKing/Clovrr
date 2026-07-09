@@ -1,4 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
+import SimulatorWidget from '@/components/SimulatorWidget';
 
 export default function Home() {
   return (
@@ -69,15 +70,8 @@ export default function Home() {
         </section>
 
         {/* PROOF SECTION */}
-        <section className="relative group">
-          <div className="absolute -inset-1 bg-gradient-to-b from-white/10 to-transparent rounded-2xl blur opacity-20 group-hover:opacity-30 transition duration-1000 group-hover:duration-200"></div>
-          <div className="bg-[#0a0a0a] rounded-2xl p-2 shadow-2xl border border-white/5 relative overflow-hidden">
-            <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
-            <div className="aspect-w-16 aspect-h-9 rounded-xl overflow-hidden bg-black flex items-center justify-center relative group-hover:scale-[1.01] transition-transform duration-700">
-              <div className="absolute inset-0 bg-center bg-cover opacity-30 mix-blend-overlay" style={{backgroundImage: 'url("https://www.transparenttextures.com/patterns/cubes.png")'}}></div>
-              <iframe src="https://www.loom.com/embed/placeholder" frameBorder="0" allowFullScreen style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}></iframe>
-            </div>
-          </div>
+        <section className="relative w-full flex justify-center">
+          <SimulatorWidget />
         </section>
 
         {/* MATH SECTION (ROI CALCULATOR) */}

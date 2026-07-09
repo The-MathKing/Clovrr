@@ -12,6 +12,7 @@
     "@ai-sdk/google": "^4.0.8",
     "@ai-sdk/react": "^4.0.16",
     "@google/generative-ai": "^0.24.1",
+    "@sendgrid/mail": "^8.1.6",
     "@supabase/ssr": "^0.12.0",
     "@supabase/supabase-js": "^2.110.0",
     "ai": "^7.0.15",

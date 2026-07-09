@@ -8,7 +8,7 @@ export default async function DashboardOverview() {
   // Fetch client details
   const { data: client } = await supabase
     .from('clients')
-    .select('id')
+    .select('id, avg_policy_value')
     .eq('email', user?.email)
     .single();
 
@@ -50,9 +50,11 @@ export default async function DashboardOverview() {
         </div>
         <div className="bg-emerald-950/20 border border-emerald-900/30 rounded-xl p-6 shadow-2xl flex flex-col justify-center relative overflow-hidden">
           <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent"></div>
-          <h3 className="text-emerald-500/80 text-xs uppercase tracking-wider font-semibold mb-1">Current Billing Cycle</h3>
-          <p className="text-3xl font-bold text-emerald-400">${qualifiedLeads * 30}</p>
-          <p className="text-[10px] text-emerald-500/50 mt-1 uppercase tracking-wide">@ $30 per qualified lead</p>
+          <h3 className="text-emerald-500/80 text-xs uppercase tracking-wider font-semibold mb-1">Est. Revenue Recovered</h3>
+          <p className="text-3xl font-bold text-emerald-400">
+             ${(qualifiedLeads * (client?.avg_policy_value || 500)).toLocaleString()}
+          </p>
+          <p className="text-[10px] text-emerald-500/50 mt-1 uppercase tracking-wide">@ ${client?.avg_policy_value || 500} avg value per lead</p>
         </div>
       </div>
 

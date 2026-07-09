@@ -13,10 +13,12 @@ export async function POST(request: Request) {
     const body = await request.json();
     
     // Validate inputs
-    const updates: Record<string, string> = {};
+    const updates: Record<string, any> = {};
     if (body.twilio_account_sid !== undefined) updates.twilio_account_sid = body.twilio_account_sid;
     if (body.twilio_auth_token !== undefined) updates.twilio_auth_token = body.twilio_auth_token;
     if (body.sendgrid_api_key !== undefined) updates.sendgrid_api_key = body.sendgrid_api_key;
+    if (body.sendgrid_from_email !== undefined) updates.sendgrid_from_email = body.sendgrid_from_email;
+    if (body.avg_policy_value !== undefined) updates.avg_policy_value = body.avg_policy_value;
     if (body.twilio_number !== undefined) updates.twilio_number = body.twilio_number;
 
     if (Object.keys(updates).length > 0) {

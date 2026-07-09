@@ -7,6 +7,8 @@ type IntegrationsClientData = {
   twilio_account_sid?: string;
   twilio_auth_token?: string;
   sendgrid_api_key?: string;
+  sendgrid_from_email?: string;
+  avg_policy_value?: number;
 };
 
 export default function IntegrationsHub({ client }: { client: IntegrationsClientData | null }) {
@@ -17,6 +19,8 @@ export default function IntegrationsHub({ client }: { client: IntegrationsClient
     twilio_account_sid: client?.twilio_account_sid || '',
     twilio_auth_token: client?.twilio_auth_token || '',
     sendgrid_api_key: client?.sendgrid_api_key || '',
+    sendgrid_from_email: client?.sendgrid_from_email || '',
+    avg_policy_value: client?.avg_policy_value || 500,
   });
 
   const handleSave = async (e: React.FormEvent) => {
@@ -96,6 +100,22 @@ export default function IntegrationsHub({ client }: { client: IntegrationsClient
           </div>
           <button disabled className="text-sm bg-[#1a1a1a] border border-gray-800 text-gray-500 px-4 py-1.5 rounded-md">Locked</button>
         </div>
+
+        {/* Business Settings */}
+        <div className="flex items-center justify-between p-4 bg-[#111] border border-gray-800/50 rounded-lg hover:border-gray-700 transition-colors">
+          <div className="flex items-center gap-4">
+            <div className="text-2xl opacity-80">📈</div>
+            <div>
+              <h3 className="text-white font-medium text-sm">Business Metrics</h3>
+              <p className="text-xs text-gray-400 mt-0.5">
+                Avg Policy Value: ${client?.avg_policy_value || 500}
+              </p>
+            </div>
+          </div>
+          <button onClick={() => setActiveModal('business')} className="text-sm bg-[#1a1a1a] border border-gray-800 text-gray-300 px-4 py-1.5 rounded-md hover:bg-gray-800 hover:text-white transition-all">
+            Manage
+          </button>
+        </div>
       </div>
 
       {/* MODALS */}
@@ -141,11 +161,27 @@ export default function IntegrationsHub({ client }: { client: IntegrationsClient
                         <li>Log in to your <a href="https://app.sendgrid.com/" target="_blank" rel="noreferrer" className="text-emerald-500 hover:underline">SendGrid Dashboard</a>.</li>
                         <li>Navigate to <strong>Settings</strong> &gt; <strong>API Keys</strong>.</li>
                         <li>Create a new API Key with <strong>Restricted Access</strong> (Mail Send only) and paste it below.</li>
+                        <li>Ensure you configure the <strong>Inbound Parse Webhook</strong> to point to `/api/webhook/sendgrid`.</li>
                       </ul>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-400 mb-1">SendGrid From Email</label>
+                      <input type="email" value={formData.sendgrid_from_email} onChange={e => setFormData({...formData, sendgrid_from_email: e.target.value})} className="w-full bg-[#0a0a0a] border border-gray-800 rounded p-2.5 text-sm text-white focus:border-emerald-500 focus:outline-none transition-colors" placeholder="hello@youragency.com" />
                     </div>
                     <div>
                       <label className="block text-xs font-medium text-gray-400 mb-1">API Key</label>
                       <input type="password" value={formData.sendgrid_api_key} onChange={e => setFormData({...formData, sendgrid_api_key: e.target.value})} className="w-full bg-[#0a0a0a] border border-gray-800 rounded p-2.5 text-sm text-white focus:border-emerald-500 focus:outline-none transition-colors" placeholder="SG.xxx..." />
+                    </div>
+                  </>
+                )}
+                {activeModal === 'business' && (
+                  <>
+                    <div className="mb-4 text-xs text-gray-400 bg-[#1a1a1a] p-3 rounded border border-gray-800">
+                      <p>Configure metrics used for calculating your dashboard ROI numbers.</p>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-400 mb-1">Average Policy Value ($)</label>
+                      <input type="number" value={formData.avg_policy_value} onChange={e => setFormData({...formData, avg_policy_value: parseInt(e.target.value) || 0})} className="w-full bg-[#0a0a0a] border border-gray-800 rounded p-2.5 text-sm text-white focus:border-emerald-500 focus:outline-none transition-colors" placeholder="500" />
                     </div>
                   </>
                 )}

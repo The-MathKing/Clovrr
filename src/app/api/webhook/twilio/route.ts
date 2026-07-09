@@ -59,6 +59,12 @@ export async function POST(req: Request) {
 
     if (!lead) throw new Error('Lead could not be found or created');
 
+    // Update last_replied_at and reset followup_count
+    await supabase.from('leads').update({
+      last_replied_at: new Date().toISOString(),
+      followup_count: 0
+    }).eq('id', lead.id);
+
     // 4. Save the incoming message to conversations
     await supabase.from('conversations').insert({
       lead_id: lead.id,
@@ -136,10 +142,12 @@ export async function POST(req: Request) {
       to: from
     });
 
-    // 10. Update Lead Status
+    // 10. Update Lead Status and last_contacted_at
+    const leadUpdates: any = { last_contacted_at: new Date().toISOString() };
     if (newStatus !== 'new' && lead.status !== newStatus) {
-      await supabase.from('leads').update({ status: newStatus }).eq('id', lead.id);
+      leadUpdates.status = newStatus;
     }
+    await supabase.from('leads').update(leadUpdates).eq('id', lead.id);
 
     return new NextResponse('OK', { status: 200 });
 

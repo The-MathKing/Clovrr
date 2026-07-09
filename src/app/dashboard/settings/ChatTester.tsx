@@ -114,7 +114,7 @@ export default function ChatTester({ initialMessage }: { initialMessage?: string
         {error && (
           <div className="flex justify-center">
             <div className="bg-red-500/20 text-red-200 border border-red-500/50 rounded-lg px-4 py-2 text-xs">
-              Error: {error.message}
+              Error: {error}
             </div>
           </div>
         )}

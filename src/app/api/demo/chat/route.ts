@@ -32,10 +32,20 @@ CORE RULES:
 
     // Convert standard {role, content} to Gemini's {role, parts: [{text}]} format
     // Note: Gemini uses 'user' and 'model' for roles.
-    const history = messages.map((msg: any) => ({
+    let history = messages.map((msg: any) => ({
       role: msg.role === 'assistant' ? 'model' : 'user',
       parts: [{ text: msg.content }]
     }));
+
+    // GEMINI API STRICT RULE: The conversation MUST start with a 'user' message.
+    // Because this is a "Lead Revival" flow where the AI reaches out first, 
+    // the history starts with 'model'. We must prepend a dummy user message.
+    if (history.length > 0 && history[0].role === 'model') {
+      history = [
+        { role: 'user', parts: [{ text: 'Please initiate the conversation as my AI Lead Concierge.' }] },
+        ...history
+      ];
+    }
 
     // We pass all messages to the model. The last message is the one to respond to.
     const result = await model.generateContent({

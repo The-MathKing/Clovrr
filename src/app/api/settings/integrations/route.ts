@@ -25,10 +25,15 @@ export async function POST(request: Request) {
     if (body.hubspot_access_token !== undefined) updates.hubspot_access_token = body.hubspot_access_token;
 
     if (Object.keys(updates).length > 0) {
+      const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+      if (!serviceKey) {
+        return NextResponse.json({ error: 'Missing SUPABASE_SERVICE_ROLE_KEY in environment variables. Please add it to Vercel.' }, { status: 500 });
+      }
+
       const { createClient: createAdminClient } = require('@supabase/supabase-js');
       const supabaseAdmin = createAdminClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-        process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+        serviceKey
       );
 
       await supabaseAdmin

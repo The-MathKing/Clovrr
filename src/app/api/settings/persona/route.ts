@@ -12,10 +12,15 @@ export async function POST(request: Request) {
 
     const { system_prompt, calendly_link, initial_message } = await request.json();
 
+    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    if (!serviceKey) {
+      return NextResponse.json({ error: 'Missing SUPABASE_SERVICE_ROLE_KEY in environment variables. Please add it to Vercel.' }, { status: 500 });
+    }
+
     const { createClient: createAdminClient } = require('@supabase/supabase-js');
     const supabaseAdmin = createAdminClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-      process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+      serviceKey
     );
 
     const { error } = await supabaseAdmin

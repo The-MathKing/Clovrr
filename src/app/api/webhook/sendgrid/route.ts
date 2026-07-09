@@ -117,7 +117,7 @@ export async function POST(req: Request) {
 - If the user uses the words "STOP", "UNSUBSCRIBE", "REMOVE", or expresses anger/explicit disinterest, immediately reply with exactly: "Understood. You have been opted out." and append the tag [STATUS: OPT_OUT] to the end of your response for the backend to read.`;
 
     const model = genAI.getGenerativeModel({ 
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.5-flash',
       systemInstruction: systemPrompt 
     });
 

@@ -26,7 +26,7 @@ CORE RULES:
 3. If they show interest, offer the booking link: clovrr.com/demo`;
 
     const model = genAI.getGenerativeModel({ 
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.5-flash',
       systemInstruction: systemPrompt 
     });
 

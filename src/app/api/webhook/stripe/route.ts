@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import Stripe from 'stripe';
+import sgMail from '@sendgrid/mail';
 
 export async function POST(req: Request) {
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder', {
@@ -54,9 +55,19 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: 'Database Error' }, { status: 500 });
       }
 
-      // 3. (Optional) Trigger an onboarding email here using Resend or SendGrid
-      // await sendOnboardingEmail(customerEmail);
-    }
+      // 3. Notify the founder about the new client using SendGrid
+      try {
+        sgMail.setApiKey(process.env.SENDGRID_API_KEY || '');
+        await sgMail.send({
+          to: 'aryan.r.padarthi@gmail.com',
+          from: 'notifications@clovrr.com', // Must be verified in SendGrid
+          subject: `🎉 New Clovrr Signup: ${customerEmail}`,
+          text: `A new client has just signed up and completed checkout! Email: ${customerEmail}`,
+        });
+        console.log(`Notification email sent to aryan.r.padarthi@gmail.com for ${customerEmail}`);
+      } catch (err) {
+        console.error('Failed to send founder notification email:', err);
+      }    }
   }
 
   return NextResponse.json({ received: true });

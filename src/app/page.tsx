@@ -34,11 +34,13 @@ export default function Home() {
               <a href="/login" className="text-sm font-medium text-gray-400 hover:text-white transition-colors">
                 Log in
               </a>
-              <a href="/demo" className="relative group inline-flex items-center justify-center">
-                <div className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-teal-500 rounded-lg opacity-70 group-hover:opacity-100 blur transition-opacity duration-300"></div>
-                <div className="relative bg-black border border-white/10 hover:border-white/20 text-white px-4 py-1.5 rounded-lg font-medium transition-all text-sm flex items-center gap-2">
-                  Book Demo
-                  <kbd className="hidden sm:inline-block px-1.5 py-0.5 rounded-md bg-white/10 text-[10px] font-mono text-gray-400">⌘K</kbd>
+              <a href="https://calendly.com/mihirbr/30min" target="_blank" rel="noopener noreferrer" className="relative group inline-flex items-center justify-center">
+                <div className="absolute -inset-1 bg-gradient-to-r from-emerald-600 to-teal-500 rounded-xl blur opacity-70 group-hover:opacity-100 transition duration-200"></div>
+                <div className="relative bg-black px-4 py-1.5 rounded-lg border border-white/10 hover:border-white/20 text-white font-medium transition-all text-sm flex items-center gap-2">
+                  <span className="text-emerald-50">Book a Demo</span>
+                  <svg className="ml-1 w-4 h-4 text-emerald-400 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
                 </div>
               </a>
             </div>
@@ -65,9 +67,8 @@ export default function Home() {
             Clovrr's AI Lead Concierge responds, qualifies, and books your inbound leads in 30 seconds, 24/7. Stop bleeding ad spend and start closing.
           </p>
           <div className="pt-8">
-            <a href="/demo" className="inline-flex items-center justify-center bg-white hover:bg-gray-200 text-black px-6 py-3 rounded-xl font-medium text-base transition-transform transform hover:scale-[1.02] shadow-[0_0_40px_rgba(255,255,255,0.1)]">
-              See the bot in action
-              <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+            <a href="https://calendly.com/mihirbr/30min" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center bg-white hover:bg-gray-200 text-black px-6 py-3 rounded-xl font-medium text-base transition-transform transform hover:scale-[1.02] shadow-[0_0_40px_rgba(255,255,255,0.1)]">
+              Get Started Now
             </a>
           </div>
         </section>

@@ -31,6 +31,9 @@ export default function Home() {
               <span className="font-semibold text-lg tracking-tight text-white">Clovrr</span>
             </div>
             <div className="flex items-center gap-6">
+              <a href="/pricing" className="text-sm font-medium text-gray-400 hover:text-white transition-colors">
+                Pricing
+              </a>
               <a href="/login" className="text-sm font-medium text-gray-400 hover:text-white transition-colors">
                 Log in
               </a>

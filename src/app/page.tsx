@@ -1,5 +1,8 @@
 /* eslint-disable react/no-unescaped-entities */
+import Link from 'next/link';
+import Image from 'next/image';
 import SimulatorWidget from '@/components/SimulatorWidget';
+import ROICalculator from '@/components/ROICalculator';
 
 export default function Home() {
   return (
@@ -74,49 +77,9 @@ export default function Home() {
           <SimulatorWidget />
         </section>
 
-        {/* MATH SECTION (ROI CALCULATOR) */}
-        <section className="py-12 relative">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold tracking-tight mb-4 text-white">The math is terrifying.</h2>
-            <p className="text-gray-400">Speed to lead is the only metric that matters.</p>
-          </div>
-          
-          <div className="grid md:grid-cols-2 gap-6 items-center">
-            {/* Without Clovrr */}
-            <div className="bg-[#0a0a0a] p-8 rounded-2xl shadow-sm border border-white/5 relative overflow-hidden group hover:border-red-500/20 transition-colors">
-              <h3 className="text-lg font-semibold text-gray-300 mb-8">Without Clovrr (14hr response)</h3>
-              <ul className="space-y-5 text-sm font-medium">
-                <li className="flex justify-between border-b border-white/5 pb-3"><span className="text-gray-500">Leads Generated</span> <span className="text-white">100</span></li>
-                <li className="flex justify-between border-b border-white/5 pb-3"><span className="text-gray-500">Close Rate</span> <span className="text-red-400">10%</span></li>
-                <li className="flex justify-between border-b border-white/5 pb-3"><span className="text-gray-500">Clients Closed</span> <span className="text-white">10</span></li>
-                <li className="flex justify-between border-b border-white/5 pb-3"><span className="text-gray-500">Avg LTV</span> <span className="text-white">$5,000</span></li>
-                <li className="flex justify-between pt-3 text-lg font-semibold"><span className="text-gray-400">Revenue</span> <span className="text-white">$50,000</span></li>
-              </ul>
-            </div>
-            
-            {/* With Clovrr */}
-            <div className="bg-[#0a0a0a] p-8 rounded-2xl shadow-2xl relative overflow-hidden group border border-emerald-500/20 transform md:scale-105 z-10 hover:border-emerald-500/40 transition-colors">
-              <div className="absolute top-0 right-0 p-6 opacity-5 mix-blend-screen pointer-events-none group-hover:opacity-10 transition-opacity">
-                <svg width="150" height="150" viewBox="0 0 100 100" fill="currentColor" className="text-emerald-500">
-                  <circle cx="50" cy="50" r="40" />
-                </svg>
-              </div>
-              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent pointer-events-none"></div>
-              
-              <h3 className="text-lg font-semibold text-emerald-400 mb-8 relative z-10 flex items-center gap-2">
-                With Clovrr (&lt;5 min response)
-                <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] uppercase tracking-wider border border-emerald-500/20">Active</span>
-              </h3>
-              
-              <ul className="space-y-5 text-sm font-medium relative z-10">
-                <li className="flex justify-between border-b border-white/5 pb-3"><span className="text-gray-400">Leads Generated</span> <span className="text-white">100</span></li>
-                <li className="flex justify-between border-b border-emerald-900/30 pb-3"><span className="text-gray-400">Close Rate</span> <span className="text-emerald-400">20%</span></li>
-                <li className="flex justify-between border-b border-white/5 pb-3"><span className="text-gray-400">Clients Closed</span> <span className="text-white">20</span></li>
-                <li className="flex justify-between border-b border-white/5 pb-3"><span className="text-gray-400">Avg LTV</span> <span className="text-white">$5,000</span></li>
-                <li className="flex justify-between pt-3 text-2xl font-bold"><span className="text-white">Revenue</span> <span className="text-emerald-400 drop-shadow-[0_0_10px_rgba(52,211,153,0.3)]">$100,000</span></li>
-              </ul>
-            </div>
-          </div>
+        {/* ROI Calculator Section */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 relative z-10">
+          <ROICalculator />
         </section>
 
       </main>

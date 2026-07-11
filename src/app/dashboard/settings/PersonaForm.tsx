@@ -70,7 +70,7 @@ export default function PersonaForm({ client }: { client: ClientData | null }) {
           value={formData.calendly_link} 
           onChange={e => setFormData({...formData, calendly_link: e.target.value})}
           className="w-full px-4 py-3 bg-black border border-white/10 rounded-lg text-white focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors" 
-          placeholder="https://calendly.com/your-name/demo"
+          placeholder="https://calendly.com/your-name/book"
         />
         <p className="mt-1 text-xs text-gray-500">The AI will provide this exact link when it qualifies a lead and tries to book a meeting.</p>
       </div>

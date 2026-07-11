@@ -24,7 +24,7 @@ export default function LoginPage({ searchParams }: { searchParams: { message: s
         </Link>
         <h2 className="text-center text-3xl font-bold tracking-tight text-white">Sign in to your dashboard</h2>
         <p className="mt-2 text-center text-sm text-gray-400">
-          Or <Link href="/demo" className="font-medium text-emerald-400 hover:text-emerald-300 transition-colors">book a demo to get access</Link>
+          Or <Link href="/book" className="font-medium text-emerald-400 hover:text-emerald-300 transition-colors">book a demo to get access</Link>
         </p>
       </div>
 

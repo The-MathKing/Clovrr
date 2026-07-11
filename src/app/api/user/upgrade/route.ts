@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import { createClient as createSupabaseServerClient } from '@/utils/supabase/server';
-import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 
 export async function POST(req: Request) {
   try {
@@ -18,23 +17,11 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // 2. Verify server environment variables
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-    if (!supabaseUrl || !supabaseServiceKey) {
-      return NextResponse.json({ error: 'Server configuration missing SUPABASE_SERVICE_ROLE_KEY' }, { status: 500 });
-    }
-
-    // 3. Initialize the admin client to update user metadata
-    const adminSupabase = createSupabaseClient(supabaseUrl, supabaseServiceKey);
-
-    // 3. Update the user's tier in their metadata
-    // We preserve existing metadata and just update/add the tier
-    const { error: updateError } = await adminSupabase.auth.admin.updateUserById(
-      user.id,
-      { user_metadata: { ...user.user_metadata, tier } }
-    );
+    // 2. Update the user's tier in their metadata using their own session!
+    // No Service Role Key required because users are allowed to update their own user_metadata.
+    const { error: updateError } = await supabaseServer.auth.updateUser({
+      data: { tier }
+    });
 
     if (updateError) {
       console.error('Failed to update user tier:', updateError);

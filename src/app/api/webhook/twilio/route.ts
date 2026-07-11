@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { syncLeadToCRMs } from '@/utils/crm';
+import twilio from 'twilio';
 
 export async function POST(req: Request) {
   // Initialize services inside handler to prevent build-time crashes when env vars are missing
@@ -23,11 +24,15 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Missing required parameters' }, { status: 400 });
     }
 
+    // Support WhatsApp seamlessly by stripping prefixes for DB lookup
+    const cleanFrom = from.replace('whatsapp:', '');
+    const cleanTo = to.replace('whatsapp:', '');
+
     // 2. Lookup Client by 'To' number
     const { data: client, error: clientError } = await supabase
       .from('clients')
       .select('id, name, calendly_link, system_prompt, twilio_account_sid, twilio_auth_token, ghl_api_key, ghl_location_id, hubspot_access_token')
-      .eq('twilio_number', to)
+      .eq('twilio_number', cleanTo)
       .single();
 
     if (clientError || !client) {
@@ -40,7 +45,7 @@ export async function POST(req: Request) {
     const { data: existingLead, error: leadError } = await supabase
       .from('leads')
       .select('id, status, name, context')
-      .eq('contact_id', from)
+      .eq('contact_id', cleanFrom)
       .eq('client_id', client.id)
       .single();
 
@@ -48,9 +53,10 @@ export async function POST(req: Request) {
 
     if (leadError || !existingLead) {
       // Create new lead if they don't exist
+      const channel = from.startsWith('whatsapp:') ? 'whatsapp' : 'sms';
       const { data: newLead, error: leadInsertError } = await supabase
         .from('leads')
-        .insert({ client_id: client.id, contact_id: from, channel: 'sms' })
+        .insert({ client_id: client.id, contact_id: cleanFrom, channel })
         .select('id, status, name, context')
         .single();
     

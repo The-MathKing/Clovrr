@@ -1,8 +1,6 @@
 import React from 'react';
 import { createClient } from '@/utils/supabase/server';
-import IntegrationsHub from './IntegrationsHub';
-import PersonaForm from './PersonaForm';
-import ChatTester from './ChatTester';
+import SettingsTabs from './SettingsTabs';
 
 export default async function SettingsPage() {
   const supabase = await createClient();
@@ -17,48 +15,8 @@ export default async function SettingsPage() {
 
   return (
     <div className="p-8 max-w-7xl mx-auto w-full">
-      <h1 className="text-2xl font-bold mb-8">Settings</h1>
-      
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-        <div className="bg-[#0a0a0a] border border-white/5 rounded-xl p-8 shadow-sm relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
-        <h2 className="text-xl font-semibold mb-6 text-white border-b border-white/5 pb-4">Agency Profile</h2>
-        
-        <form className="space-y-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-400 mb-2">Company Name</label>
-            <input 
-              type="text" 
-              defaultValue={client?.name || ''} 
-              readOnly
-              className="w-full px-4 py-3 bg-black border border-white/5 rounded-lg text-white opacity-70 cursor-not-allowed focus:outline-none transition-colors" 
-            />
-            <p className="mt-1 text-xs text-gray-500">Managed by Clovrr admin.</p>
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-400 mb-2">Contact Email</label>
-            <input 
-              type="email" 
-              defaultValue={client?.email || user?.email || ''} 
-              readOnly
-              className="w-full px-4 py-3 bg-black border border-white/5 rounded-lg text-white opacity-70 cursor-not-allowed focus:outline-none transition-colors" 
-            />
-          </div>
-        </form>
-      </div>
-
-      <div className="bg-[#0a0a0a] border border-white/5 rounded-xl p-8 shadow-sm relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
-        <h2 className="text-xl font-semibold mb-6 text-white border-b border-white/5 pb-4">Bot Configuration</h2>
-        
-        <PersonaForm client={client} />
-      </div>
-
-      <ChatTester initialMessage={client?.initial_message} />
-
-      <IntegrationsHub client={client} />
-      </div>
+      <h1 className="text-3xl font-bold mb-8 tracking-tight">Settings</h1>
+      <SettingsTabs client={client} userEmail={user?.email || ''} />
     </div>
   );
 }

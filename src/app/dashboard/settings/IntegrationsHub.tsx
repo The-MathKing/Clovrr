@@ -14,7 +14,7 @@ type IntegrationsClientData = {
   avg_policy_value?: number;
 };
 
-export default function IntegrationsHub({ client }: { client: IntegrationsClientData | null }) {
+export default function IntegrationsHub({ client, filter = 'all' }: { client: IntegrationsClientData | null, filter?: string }) {
   const [activeModal, setActiveModal] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -40,8 +40,7 @@ export default function IntegrationsHub({ client }: { client: IntegrationsClient
       });
       if (res.ok) {
         setActiveModal(null);
-        // Toast could go here
-        window.location.reload(); // Refresh to update server components
+        window.location.reload(); 
       } else {
         alert('Failed to save settings.');
       }
@@ -53,108 +52,151 @@ export default function IntegrationsHub({ client }: { client: IntegrationsClient
   };
 
   return (
-    <div className="bg-[#0a0a0a] border border-gray-800/50 rounded-xl p-8 relative overflow-hidden group">
-      <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
-      
-      <h2 className="text-xl font-semibold mb-2 text-white relative z-10">Omnichannel Integrations</h2>
-      <p className="text-sm text-gray-400 mb-6 border-b border-gray-800/50 pb-4 relative z-10">
-        Connect your own Twilio and SendGrid accounts to enable SMS and Email capabilities for your AI concierge.
-        You maintain full ownership of your phone numbers and sender identities.
-      </p>
-      
-      <div className="space-y-4 relative z-10">
-        {/* Twilio */}
-        <div className="flex items-center justify-between p-4 bg-[#111] border border-gray-800/50 rounded-lg hover:border-gray-700 transition-colors">
+    <div className="space-y-4">
+      {/* MESSAGING FILTER */}
+      {(filter === 'all' || filter === 'messaging') && (
+        <>
+          <div className="flex items-center justify-between p-4 bg-[#111] border border-gray-800/50 rounded-lg hover:border-gray-700 transition-colors">
+            <div className="flex items-center gap-4">
+              <div className="text-2xl opacity-80">📱</div>
+              <div>
+                <h3 className="text-white font-medium text-sm">Twilio SMS</h3>
+                <p className="text-xs text-gray-400 mt-0.5">
+                  {client?.twilio_account_sid ? `Connected (${client?.twilio_number})` : 'Not configured'}
+                </p>
+              </div>
+            </div>
+            <button onClick={() => setActiveModal('twilio')} className="text-sm bg-[#1a1a1a] border border-gray-800 text-gray-300 px-4 py-1.5 rounded-md hover:bg-gray-800 hover:text-white transition-all">
+              {client?.twilio_account_sid ? 'Manage' : 'Connect'}
+            </button>
+          </div>
+
+          <div className="flex items-center justify-between p-4 bg-[#111] border border-gray-800/50 rounded-lg hover:border-gray-700 transition-colors">
+            <div className="flex items-center gap-4">
+              <div className="text-2xl opacity-80">💬</div>
+              <div>
+                <h3 className="text-white font-medium text-sm">WhatsApp Business</h3>
+                <p className="text-xs text-gray-400 mt-0.5">
+                  {client?.twilio_account_sid ? 'Ready via Twilio' : 'Requires Twilio Setup'}
+                </p>
+              </div>
+            </div>
+            <button onClick={() => setActiveModal('whatsapp')} className="text-sm bg-[#1a1a1a] border border-gray-800 text-gray-300 px-4 py-1.5 rounded-md hover:bg-gray-800 hover:text-white transition-all">
+              View Info
+            </button>
+          </div>
+
+          <div className="flex items-center justify-between p-4 bg-[#111] border border-gray-800/50 rounded-lg hover:border-gray-700 transition-colors">
+            <div className="flex items-center gap-4">
+              <div className="text-2xl opacity-80">📸</div>
+              <div>
+                <h3 className="text-white font-medium text-sm">Meta (FB/Instagram)</h3>
+                <p className="text-xs text-gray-400 mt-0.5">Configure Graph API</p>
+              </div>
+            </div>
+            <button onClick={() => setActiveModal('meta')} className="text-sm bg-[#1a1a1a] border border-gray-800 text-gray-300 px-4 py-1.5 rounded-md hover:bg-gray-800 hover:text-white transition-all">
+              Setup
+            </button>
+          </div>
+
+          <div className="flex items-center justify-between p-4 bg-[#111] border border-gray-800/50 rounded-lg hover:border-gray-700 transition-colors">
+            <div className="flex items-center gap-4">
+              <div className="text-2xl opacity-80">🗺️</div>
+              <div>
+                <h3 className="text-white font-medium text-sm">Google Business</h3>
+                <p className="text-xs text-gray-400 mt-0.5">Configure Google API</p>
+              </div>
+            </div>
+            <button onClick={() => setActiveModal('google')} className="text-sm bg-[#1a1a1a] border border-gray-800 text-gray-300 px-4 py-1.5 rounded-md hover:bg-gray-800 hover:text-white transition-all">
+              Setup
+            </button>
+          </div>
+
+          <div className="flex items-center justify-between p-4 bg-[#111] border border-gray-800/50 rounded-lg hover:border-gray-700 transition-colors">
+            <div className="flex items-center gap-4">
+              <div className="text-2xl opacity-80">✉️</div>
+              <div>
+                <h3 className="text-white font-medium text-sm">Email (SendGrid)</h3>
+                <p className="text-xs text-gray-400 mt-0.5">
+                  {client?.sendgrid_api_key ? 'Connected' : 'Not configured'}
+                </p>
+              </div>
+            </div>
+            <button onClick={() => setActiveModal('sendgrid')} className="text-sm bg-[#1a1a1a] border border-gray-800 text-gray-300 px-4 py-1.5 rounded-md hover:bg-gray-800 hover:text-white transition-all">
+              {client?.sendgrid_api_key ? 'Manage' : 'Connect'}
+            </button>
+          </div>
+        </>
+      )}
+
+      {/* VOICE FILTER */}
+      {(filter === 'all' || filter === 'voice') && (
+        <div className="flex items-center justify-between p-4 bg-[#111] border border-emerald-500/30 rounded-lg hover:border-emerald-500/50 transition-colors shadow-[0_0_15px_rgba(16,185,129,0.1)]">
           <div className="flex items-center gap-4">
-            <div className="text-2xl opacity-80">📱</div>
+            <div className="text-2xl opacity-80">🎙️</div>
             <div>
-              <h3 className="text-white font-medium text-sm">Twilio SMS</h3>
+              <h3 className="text-emerald-400 font-medium text-sm">Twilio Voice + Gemini AI</h3>
               <p className="text-xs text-gray-400 mt-0.5">
-                {client?.twilio_account_sid ? `Connected (${client?.twilio_number})` : 'Not configured'}
+                Enable conversational voice AI on your Twilio number
               </p>
             </div>
           </div>
-          <button onClick={() => setActiveModal('twilio')} className="text-sm bg-[#1a1a1a] border border-gray-800 text-gray-300 px-4 py-1.5 rounded-md hover:bg-gray-800 hover:text-white transition-all">
-            {client?.twilio_account_sid ? 'Manage' : 'Connect'}
+          <button onClick={() => setActiveModal('voice')} className="text-sm bg-emerald-600/20 border border-emerald-500/50 text-emerald-400 px-4 py-1.5 rounded-md hover:bg-emerald-600/40 transition-all">
+            Configure
           </button>
         </div>
+      )}
 
-        {/* SendGrid */}
+      {/* CRMS FILTER */}
+      {(filter === 'all' || filter === 'crms') && (
+        <>
+          <div className="flex items-center justify-between p-4 bg-[#111] border border-gray-800/50 rounded-lg hover:border-gray-700 transition-colors">
+            <div className="flex items-center gap-4">
+              <div className="text-2xl opacity-80">🏢</div>
+              <div>
+                <h3 className="text-white font-medium text-sm">GoHighLevel</h3>
+                <p className="text-xs text-gray-400 mt-0.5">
+                  {client?.ghl_api_key ? 'Connected' : 'Not configured'}
+                </p>
+              </div>
+            </div>
+            <button onClick={() => setActiveModal('gohighlevel')} className="text-sm bg-[#1a1a1a] border border-gray-800 text-gray-300 px-4 py-1.5 rounded-md hover:bg-gray-800 hover:text-white transition-all">
+              {client?.ghl_api_key ? 'Manage' : 'Connect'}
+            </button>
+          </div>
+
+          <div className="flex items-center justify-between p-4 bg-[#111] border border-gray-800/50 rounded-lg hover:border-gray-700 transition-colors">
+            <div className="flex items-center gap-4">
+              <div className="text-2xl opacity-80">⚙️</div>
+              <div>
+                <h3 className="text-white font-medium text-sm">HubSpot</h3>
+                <p className="text-xs text-gray-400 mt-0.5">
+                  {client?.hubspot_access_token ? 'Connected' : 'Not configured'}
+                </p>
+              </div>
+            </div>
+            <button onClick={() => setActiveModal('hubspot')} className="text-sm bg-[#1a1a1a] border border-gray-800 text-gray-300 px-4 py-1.5 rounded-md hover:bg-gray-800 hover:text-white transition-all">
+              {client?.hubspot_access_token ? 'Manage' : 'Connect'}
+            </button>
+          </div>
+        </>
+      )}
+
+      {/* WIDGET FILTER */}
+      {(filter === 'all' || filter === 'widget') && (
         <div className="flex items-center justify-between p-4 bg-[#111] border border-gray-800/50 rounded-lg hover:border-gray-700 transition-colors">
           <div className="flex items-center gap-4">
-            <div className="text-2xl opacity-80">✉️</div>
+            <div className="text-2xl opacity-80">🌐</div>
             <div>
-              <h3 className="text-white font-medium text-sm">Email (SendGrid)</h3>
-              <p className="text-xs text-gray-400 mt-0.5">
-                {client?.sendgrid_api_key ? 'Connected' : 'Not configured'}
-              </p>
+              <h3 className="text-white font-medium text-sm">Website Live Chat</h3>
+              <p className="text-xs text-gray-400 mt-0.5">Embed the AI on your site</p>
             </div>
           </div>
-          <button onClick={() => setActiveModal('sendgrid')} className="text-sm bg-[#1a1a1a] border border-gray-800 text-gray-300 px-4 py-1.5 rounded-md hover:bg-gray-800 hover:text-white transition-all">
-            {client?.sendgrid_api_key ? 'Manage' : 'Connect'}
+          <button onClick={() => setActiveModal('widget_setup')} className="text-sm bg-[#1a1a1a] border border-gray-800 text-gray-300 px-4 py-1.5 rounded-md hover:bg-gray-800 hover:text-white transition-all">
+            Get Code
           </button>
         </div>
-
-        {/* Instagram - Locked */}
-        <div className="flex items-center justify-between p-4 bg-[#111] border border-gray-800/50 rounded-lg opacity-50 cursor-not-allowed">
-          <div className="flex items-center gap-4">
-            <div className="text-2xl opacity-50">📸</div>
-            <div>
-              <h3 className="text-white font-medium text-sm">Instagram DMs</h3>
-              <p className="text-xs text-gray-500 mt-0.5">Requires Meta App Approval</p>
-            </div>
-          </div>
-          <button disabled className="text-sm bg-[#1a1a1a] border border-gray-800 text-gray-500 px-4 py-1.5 rounded-md">Locked</button>
-        </div>
-
-        {/* GoHighLevel */}
-        <div className="flex items-center justify-between p-4 bg-[#111] border border-gray-800/50 rounded-lg hover:border-gray-700 transition-colors">
-          <div className="flex items-center gap-4">
-            <div className="text-2xl opacity-80">🏢</div>
-            <div>
-              <h3 className="text-white font-medium text-sm">GoHighLevel (CRM)</h3>
-              <p className="text-xs text-gray-400 mt-0.5">
-                {client?.ghl_api_key ? 'Connected' : 'Not configured'}
-              </p>
-            </div>
-          </div>
-          <button onClick={() => setActiveModal('gohighlevel')} className="text-sm bg-[#1a1a1a] border border-gray-800 text-gray-300 px-4 py-1.5 rounded-md hover:bg-gray-800 hover:text-white transition-all">
-            {client?.ghl_api_key ? 'Manage' : 'Connect'}
-          </button>
-        </div>
-
-        {/* HubSpot */}
-        <div className="flex items-center justify-between p-4 bg-[#111] border border-gray-800/50 rounded-lg hover:border-gray-700 transition-colors">
-          <div className="flex items-center gap-4">
-            <div className="text-2xl opacity-80">⚙️</div>
-            <div>
-              <h3 className="text-white font-medium text-sm">HubSpot (CRM)</h3>
-              <p className="text-xs text-gray-400 mt-0.5">
-                {client?.hubspot_access_token ? 'Connected' : 'Not configured'}
-              </p>
-            </div>
-          </div>
-          <button onClick={() => setActiveModal('hubspot')} className="text-sm bg-[#1a1a1a] border border-gray-800 text-gray-300 px-4 py-1.5 rounded-md hover:bg-gray-800 hover:text-white transition-all">
-            {client?.hubspot_access_token ? 'Manage' : 'Connect'}
-          </button>
-        </div>
-
-        {/* Business Settings */}
-        <div className="flex items-center justify-between p-4 bg-[#111] border border-gray-800/50 rounded-lg hover:border-gray-700 transition-colors">
-          <div className="flex items-center gap-4">
-            <div className="text-2xl opacity-80">📈</div>
-            <div>
-              <h3 className="text-white font-medium text-sm">Business Metrics</h3>
-              <p className="text-xs text-gray-400 mt-0.5">
-                Avg Policy Value: ${client?.avg_policy_value || 500}
-              </p>
-            </div>
-          </div>
-          <button onClick={() => setActiveModal('business')} className="text-sm bg-[#1a1a1a] border border-gray-800 text-gray-300 px-4 py-1.5 rounded-md hover:bg-gray-800 hover:text-white transition-all">
-            Manage
-          </button>
-        </div>
-      </div>
+      )}
 
       {/* MODALS */}
       {activeModal && (
@@ -164,10 +206,15 @@ export default function IntegrationsHub({ client }: { client: IntegrationsClient
             <div className="p-6">
               <h3 className="text-lg font-semibold text-white mb-4">
                 {activeModal === 'twilio' && 'Configure Twilio SMS'}
+                {activeModal === 'whatsapp' && 'WhatsApp Business Info'}
+                {activeModal === 'meta' && 'Configure Meta Graph API'}
+                {activeModal === 'google' && 'Configure Google Business API'}
+                {activeModal === 'voice' && 'Configure Inbound Voice AI'}
                 {activeModal === 'sendgrid' && 'Configure SendGrid'}
                 {activeModal === 'gohighlevel' && 'Configure GoHighLevel'}
                 {activeModal === 'hubspot' && 'Configure HubSpot'}
                 {activeModal === 'business' && 'Configure Business Metrics'}
+                {activeModal === 'widget_setup' && 'Live Chat Widget Code'}
               </h3>
               
               <form onSubmit={handleSave} className="space-y-4">
@@ -194,6 +241,68 @@ export default function IntegrationsHub({ client }: { client: IntegrationsClient
                       <input type="password" value={formData.twilio_auth_token} onChange={e => setFormData({...formData, twilio_auth_token: e.target.value})} className="w-full bg-[#0a0a0a] border border-gray-800 rounded p-2.5 text-sm text-white focus:border-emerald-500 focus:outline-none transition-colors" placeholder="••••••••••••••••" />
                     </div>
                   </>
+                )}
+
+                {activeModal === 'whatsapp' && (
+                  <div className="mb-4 text-xs text-gray-400 bg-[#1a1a1a] p-4 rounded border border-gray-800 leading-relaxed">
+                    <p className="mb-3 font-medium text-white">WhatsApp is automatically enabled if your Twilio number supports it!</p>
+                    <p className="mb-3">To use WhatsApp:</p>
+                    <ul className="list-disc pl-4 space-y-2 mb-4">
+                      <li>Go to Twilio Console &gt; Messaging &gt; Senders &gt; WhatsApp Senders.</li>
+                      <li>Register your connected Twilio number ({client?.twilio_number || 'Not connected'}) for WhatsApp.</li>
+                      <li>Users can now message your bot on WhatsApp by sending texts to your number! Our webhook automatically handles `whatsapp:+` prefixes.</li>
+                    </ul>
+                  </div>
+                )}
+
+                {activeModal === 'meta' && (
+                  <div className="mb-4 text-xs text-gray-400 bg-[#1a1a1a] p-4 rounded border border-gray-800 leading-relaxed">
+                    <p className="mb-3 text-emerald-500 font-medium border-b border-gray-800 pb-2">Developer Approval Required</p>
+                    <p className="mb-3">To connect Instagram and Facebook, you must register a Meta Developer App:</p>
+                    <ul className="list-disc pl-4 space-y-2">
+                      <li>Go to <a href="https://developers.facebook.com/" target="_blank" className="text-emerald-500 hover:underline">Meta for Developers</a>.</li>
+                      <li>Create an app and configure <strong>Messenger</strong> and <strong>Instagram Graph API</strong>.</li>
+                      <li>Set your webhook URL to: <code className="bg-black px-1 py-0.5 rounded text-emerald-400">https://your-domain.com/api/webhook/meta</code></li>
+                      <li>Contact Clovrr support to input your Page Access Tokens once approved.</li>
+                    </ul>
+                  </div>
+                )}
+
+                {activeModal === 'google' && (
+                  <div className="mb-4 text-xs text-gray-400 bg-[#1a1a1a] p-4 rounded border border-gray-800 leading-relaxed">
+                    <p className="mb-3 text-emerald-500 font-medium border-b border-gray-800 pb-2">Developer Approval Required</p>
+                    <p className="mb-3">To connect Google Maps chat, you must register with Google:</p>
+                    <ul className="list-disc pl-4 space-y-2">
+                      <li>Go to <a href="https://businessmessages.google.com/" target="_blank" className="text-emerald-500 hover:underline">Google Business Messages Console</a>.</li>
+                      <li>Create a partner account and configure your brand.</li>
+                      <li>Set your webhook URL to: <code className="bg-black px-1 py-0.5 rounded text-emerald-400">https://your-domain.com/api/webhook/google</code></li>
+                      <li>Contact Clovrr support to input your Service Account keys once approved.</li>
+                    </ul>
+                  </div>
+                )}
+
+                {activeModal === 'voice' && (
+                  <div className="mb-4 text-xs text-gray-400 bg-[#1a1a1a] p-4 rounded border border-gray-800 leading-relaxed">
+                    <p className="mb-3 font-medium text-emerald-400">Twilio Voice + Gemini AI</p>
+                    <p className="mb-3">Your Twilio number can now answer inbound phone calls using Google Gemini!</p>
+                    <ul className="list-disc pl-4 space-y-2 mb-4">
+                      <li>Go to your Twilio Console Phone Numbers list.</li>
+                      <li>Click your number ({client?.twilio_number || 'Not connected'}).</li>
+                      <li>Scroll down to <strong>Voice & Fax</strong>.</li>
+                      <li>Set "A CALL COMES IN" to Webhook, and set the URL to: <br/><code className="bg-black px-1 py-0.5 rounded text-emerald-400 inline-block mt-1">https://your-domain.com/api/webhook/voice</code></li>
+                    </ul>
+                    <p className="text-gray-500 italic mt-2">Cost: ~$0.02/minute (Twilio Voice) + Gemini API Token costs.</p>
+                  </div>
+                )}
+
+                {activeModal === 'widget_setup' && (
+                  <div className="mb-4 text-xs text-gray-400 bg-[#1a1a1a] p-4 rounded border border-gray-800 leading-relaxed">
+                    <p className="mb-3 font-medium text-white">Embed Code</p>
+                    <p className="mb-3">Copy and paste this snippet into the <code>&lt;head&gt;</code> of your website (WordPress, Webflow, Shopify) to enable the Live Chat widget:</p>
+                    <div className="bg-black p-3 rounded font-mono text-emerald-400 text-[10px] overflow-x-auto whitespace-pre">
+                      {`<script src="https://your-domain.com/widget.js" data-clovrr-id="${client?.id || 'CLIENT_ID'}"></script>`}
+                    </div>
+                  </div>
                 )}
                 {activeModal === 'sendgrid' && (
                   <>

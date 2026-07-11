@@ -22,14 +22,17 @@ export default function PricingClient({ isLoggedIn }: { isLoggedIn: boolean }) {
         body: JSON.stringify({ tier })
       });
 
-      if (!res.ok) throw new Error('Upgrade failed');
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'Server responded with a status error');
+      }
 
       // Refresh the page/layout to fetch new user_metadata, then redirect to dashboard
       router.refresh();
       router.push('/dashboard');
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      alert('Failed to process upgrade mock. Please try again.');
+      alert(`Failed to upgrade: ${err.message}`);
       setLoadingTier(null);
     }
   };

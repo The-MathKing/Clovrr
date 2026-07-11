@@ -18,11 +18,16 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // 2. Initialize the admin client to update user metadata
-    const adminSupabase = createSupabaseClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-      process.env.SUPABASE_SERVICE_ROLE_KEY || ''
-    );
+    // 2. Verify server environment variables
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+    if (!supabaseUrl || !supabaseServiceKey) {
+      return NextResponse.json({ error: 'Server configuration missing SUPABASE_SERVICE_ROLE_KEY' }, { status: 500 });
+    }
+
+    // 3. Initialize the admin client to update user metadata
+    const adminSupabase = createSupabaseClient(supabaseUrl, supabaseServiceKey);
 
     // 3. Update the user's tier in their metadata
     // We preserve existing metadata and just update/add the tier

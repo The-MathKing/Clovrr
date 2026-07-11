@@ -30,10 +30,10 @@ export default function Home() {
         </div>
       </nav>
 
-      <main className="pt-40 pb-32 px-6 md:px-12 max-w-[1400px] mx-auto">
+      <main className="pt-32 pb-16 px-6 md:px-12 max-w-[1400px] mx-auto flex flex-col gap-y-24 md:gap-y-40">
         
         {/* HERO SECTION */}
-        <section className="min-h-[75vh] flex flex-col justify-center items-start relative z-10">
+        <section className="flex flex-col justify-center items-start relative z-10 pt-16 md:pt-24">
           <SplitText 
             text="Magnetic commerce for ambitious brands." 
             className="text-6xl md:text-8xl lg:text-[7.5rem] font-black tracking-tighter leading-[0.9] max-w-5xl mb-10"
@@ -56,17 +56,17 @@ export default function Home() {
         </section>
 
         {/* SIMULATOR & ROI SECTION */}
-        <section className="py-32 relative z-10 space-y-40">
+        <section className="relative z-10 flex flex-col gap-y-32 md:gap-y-40">
           
           {/* Simulator Section */}
-          <div className="flex flex-col items-center text-center gap-10 max-w-4xl mx-auto">
+          <div className="flex flex-col items-center text-center gap-10 max-w-4xl mx-auto w-full">
             <div>
               <h2 className="text-5xl md:text-7xl font-bold tracking-tighter mb-6">Experience<br/><span className="text-emerald-500">the speed.</span></h2>
               <p className="text-gray-400 text-xl font-light leading-relaxed">
                 Test out the Clovrr AI Concierge right now. Send a message and watch how quickly it responds, qualifies, and pushes to conversion.
               </p>
             </div>
-            <div className="w-full max-w-lg p-1 rounded-[2.5rem] bg-gradient-to-b from-white/10 to-transparent">
+            <div className="w-full max-w-lg p-1 rounded-[2.5rem] bg-gradient-to-b from-white/10 to-transparent mx-auto">
               <div className="rounded-[2.4rem] bg-[#050505] p-2">
                  <SimulatorWidget />
               </div>
@@ -74,7 +74,7 @@ export default function Home() {
           </div>
           
           {/* ROI Section */}
-          <div className="flex flex-col items-center text-center gap-10 max-w-4xl mx-auto">
+          <div className="flex flex-col items-center text-center gap-10 max-w-4xl mx-auto w-full">
             <div>
               <h2 className="text-5xl md:text-7xl font-bold tracking-tighter mb-6">Calculate<br/><span className="text-emerald-500">the return.</span></h2>
               <p className="text-gray-400 text-xl font-light leading-relaxed">
@@ -91,6 +91,16 @@ export default function Home() {
         </section>
 
       </main>
+
+      <footer className="border-t border-white/10 py-12 mt-20 relative z-10">
+        <div className="max-w-[1400px] mx-auto px-6 md:px-12 flex flex-col md:flex-row items-center justify-between text-sm text-gray-500">
+          <p>© {new Date().getFullYear()} Clovrr. All rights reserved.</p>
+          <div className="flex gap-6 mt-4 md:mt-0">
+            <Link href="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link>
+            <Link href="/terms-of-service" className="hover:text-white transition-colors">Terms of Service</Link>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

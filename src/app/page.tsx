@@ -56,38 +56,38 @@ export default function Home() {
         </section>
 
         {/* SIMULATOR & ROI SECTION */}
-        <section className="py-32 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-24 items-center">
-            
-            <div className="flex flex-col gap-10">
-              <div>
-                <h2 className="text-5xl md:text-7xl font-bold tracking-tighter mb-6">Experience<br/><span className="text-emerald-500">the speed.</span></h2>
-                <p className="text-gray-400 text-xl font-light max-w-md leading-relaxed">
-                  Test out the Clovrr AI Concierge right now. Send a message and watch how quickly it responds, qualifies, and pushes to conversion.
-                </p>
-              </div>
-              <div className="p-1 rounded-[2.5rem] bg-gradient-to-b from-white/10 to-transparent">
-                <div className="rounded-[2.4rem] bg-[#050505] p-2">
-                   <SimulatorWidget />
-                </div>
+        <section className="py-32 relative z-10 space-y-40">
+          
+          {/* Simulator Section */}
+          <div className="flex flex-col items-center text-center gap-10 max-w-4xl mx-auto">
+            <div>
+              <h2 className="text-5xl md:text-7xl font-bold tracking-tighter mb-6">Experience<br/><span className="text-emerald-500">the speed.</span></h2>
+              <p className="text-gray-400 text-xl font-light leading-relaxed">
+                Test out the Clovrr AI Concierge right now. Send a message and watch how quickly it responds, qualifies, and pushes to conversion.
+              </p>
+            </div>
+            <div className="w-full max-w-lg p-1 rounded-[2.5rem] bg-gradient-to-b from-white/10 to-transparent">
+              <div className="rounded-[2.4rem] bg-[#050505] p-2">
+                 <SimulatorWidget />
               </div>
             </div>
-            
-            <div className="flex flex-col gap-10">
-              <div>
-                <h2 className="text-5xl md:text-7xl font-bold tracking-tighter mb-6">Calculate<br/><span className="text-emerald-500">the return.</span></h2>
-                <p className="text-gray-400 text-xl font-light max-w-md leading-relaxed">
-                  A 5-minute delay drops your lead conversion rate by 80%. See how much revenue you are leaving on the table.
-                </p>
-              </div>
-              <div className="p-1 rounded-[2.5rem] bg-gradient-to-b from-emerald-500/30 to-transparent">
-                <div className="rounded-[2.4rem] bg-[#050505] p-2">
-                   <ROICalculator />
-                </div>
-              </div>
-            </div>
-
           </div>
+          
+          {/* ROI Section */}
+          <div className="flex flex-col items-center text-center gap-10 max-w-4xl mx-auto">
+            <div>
+              <h2 className="text-5xl md:text-7xl font-bold tracking-tighter mb-6">Calculate<br/><span className="text-emerald-500">the return.</span></h2>
+              <p className="text-gray-400 text-xl font-light leading-relaxed">
+                A 5-minute delay drops your lead conversion rate by 80%. See how much revenue you are leaving on the table.
+              </p>
+            </div>
+            <div className="w-full p-1 rounded-[2.5rem] bg-gradient-to-b from-emerald-500/30 to-transparent">
+              <div className="rounded-[2.4rem] bg-[#050505] p-2">
+                 <ROICalculator />
+              </div>
+            </div>
+          </div>
+
         </section>
 
       </main>

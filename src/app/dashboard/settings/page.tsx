@@ -11,9 +11,7 @@ export default async function SettingsPage() {
     .from('clients')
     .select('*')
     .eq('email', user?.email)
-    .single();
-
-  const isFree = !user?.user_metadata?.tier || user?.user_metadata?.tier === 'Free';
+  const isFree = !client?.tier || client.tier === 'Free';
 
   return (
     <div className="p-8 max-w-7xl mx-auto w-full">

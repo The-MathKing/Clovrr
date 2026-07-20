@@ -16,7 +16,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   // Fetch client details
   const { data: client } = await supabase
     .from('clients')
-    .select('name')
+    .select('name, tier')
     .eq('email', user.email)
     .single();
 
@@ -44,9 +44,9 @@ export default async function DashboardLayout({ children }: { children: React.Re
             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
               {client?.name || 'Agency Dashboard'}
             </p>
-            {user.user_metadata?.tier ? (
+            {client?.tier && client.tier !== 'Free' ? (
               <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] font-bold uppercase tracking-wider border border-emerald-500/20">
-                {user.user_metadata.tier}
+                {client.tier}
               </span>
             ) : (
               <a href="/pricing" className="px-2 py-0.5 rounded-full bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white text-[10px] font-bold uppercase tracking-wider border border-white/10 transition-colors">

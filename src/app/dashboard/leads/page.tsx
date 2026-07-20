@@ -10,7 +10,7 @@ export default async function LeadsManager() {
   // Fetch client details
   const { data: client } = await supabase
     .from('clients')
-    .select('id')
+    .select('id, tier')
     .eq('email', user?.email)
     .single();
 
@@ -26,7 +26,7 @@ export default async function LeadsManager() {
     leads = data || [];
   }
 
-  const isFree = !user?.user_metadata?.tier || user?.user_metadata?.tier === 'Free';
+  const isFree = !client?.tier || client.tier === 'Free';
 
   return (
     <div className="p-8 h-full flex flex-col">

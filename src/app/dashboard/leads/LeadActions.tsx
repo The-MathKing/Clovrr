@@ -2,7 +2,7 @@
 import React, { useState, useRef } from 'react';
 import Papa from 'papaparse';
 
-export default function LeadActions() {
+export default function LeadActions({ isFree }: { isFree?: boolean }) {
   const [uploading, setUploading] = useState(false);
   const [triggering, setTriggering] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -57,6 +57,20 @@ export default function LeadActions() {
       setTriggering(false);
     }
   };
+
+  if (isFree) {
+    return (
+      <div className="flex gap-4 mb-6">
+        <div className="bg-gray-900 border border-gray-800 text-gray-400 p-4 rounded-xl text-sm flex items-center gap-3 w-full">
+          <svg className="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+          Your account is on the Free tier. Upgrade to import leads and launch campaigns.
+          <a href="/pricing" className="ml-auto bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-1.5 rounded-lg text-sm font-medium transition-colors">
+            Upgrade Plan
+          </a>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex gap-4 mb-6">

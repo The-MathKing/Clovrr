@@ -26,13 +26,15 @@ export default async function LeadsManager() {
     leads = data || [];
   }
 
+  const isFree = !user?.user_metadata?.tier || user?.user_metadata?.tier === 'Free';
+
   return (
     <div className="p-8 h-full flex flex-col">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Lead Manager</h1>
       </div>
       
-      <LeadActions />
+      <LeadActions isFree={isFree} />
 
       <LeadsTable leads={leads} />
     </div>

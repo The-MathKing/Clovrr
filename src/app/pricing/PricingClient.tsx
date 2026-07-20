@@ -8,33 +8,7 @@ export default function PricingClient({ isLoggedIn }: { isLoggedIn: boolean }) {
   const [loadingTier, setLoadingTier] = useState<string | null>(null);
 
   const handleUpgrade = async (tier: string) => {
-    if (!isLoggedIn) {
-      router.push('/login');
-      return;
-    }
-
-    setLoadingTier(tier);
-    
-    try {
-      const res = await fetch('/api/user/upgrade', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tier })
-      });
-
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || 'Server responded with a status error');
-      }
-
-      // Refresh the page/layout to fetch new user_metadata, then redirect to dashboard
-      router.refresh();
-      router.push('/dashboard');
-    } catch (err: any) {
-      console.error(err);
-      alert(`Failed to upgrade: ${err.message}`);
-      setLoadingTier(null);
-    }
+    window.location.href = 'https://calendly.com/mihirbr/30min';
   };
 
   return (

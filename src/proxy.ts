@@ -2,6 +2,20 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 
 export async function proxy(request: NextRequest) {
+  // If Supabase falls back to a misconfigured Site URL containing wildcards
+  if (request.nextUrl.pathname === '/**' || request.nextUrl.pathname === '/%2A%2A') {
+    const url = request.nextUrl.clone()
+    url.pathname = '/auth/callback'
+    return NextResponse.redirect(url)
+  }
+  
+  // If Supabase falls back to the root URL but has the auth code
+  if (request.nextUrl.pathname === '/' && request.nextUrl.searchParams.has('code')) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/auth/callback'
+    return NextResponse.redirect(url)
+  }
+
   let response = NextResponse.next({
     request: {
       headers: request.headers,
@@ -57,5 +71,8 @@ export const config = {
   matcher: [
     '/dashboard/:path*',
     '/login',
+    '/',
+    '/%2A%2A',
+    '/\\*\\*',
   ],
 }

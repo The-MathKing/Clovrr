@@ -12,11 +12,15 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   }
 
   // Fetch client details to check admin status
-  const { data: client } = await supabase
+  const { data: client, error } = await supabase
     .from('clients')
     .select('is_admin')
     .eq('email', user.email)
     .single();
+
+  if (error) {
+    console.error('Admin layout client query error:', error);
+  }
 
   if (!client?.is_admin) {
     redirect('/dashboard');
